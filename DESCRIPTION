@@ -1,0 +1,21 @@
+Package: evfuse
+Title: Spatial Data Fusion for Extreme Value Analysis
+Version: 0.1.0
+Authors@R: person("Brian", "White", email = "bwhite@wakehealth.edu", role = c("aut", "cre"))
+Description: Two-stage frequentist framework for fusing multiple spatial data
+    sources with extreme value margins. Fits pointwise GEV distributions at
+    observed sites, then estimates a multivariate Gaussian process with
+    coregionalization structure via maximum likelihood. Supports kriging with
+    partial observations, return level estimation, and uncertainty quantification
+    via delta method and simulation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.0
+Imports:
+    extRemes,
+    Matrix,
+    stats
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
