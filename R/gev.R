@@ -51,9 +51,17 @@ fit_gev_all <- function(dat, log_scale = TRUE) {
     sigma <- pars["scale"]
     xi <- pars["shape"]
 
-    # Get the asymptotic covariance matrix from fevd
-    # fevd parameterizes as (location, scale, shape)
-    V_raw <- vcov(fit)
+    # Get the asymptotic covariance matrix from the Hessian
+    # fevd returns the observed information matrix (not -Hessian), so invert directly
+    V_raw <- tryCatch(
+      solve(fit$results$hessian),
+      error = function(e) NULL
+    )
+    if (is.null(V_raw) || any(diag(V_raw) < 0)) {
+      warning(sprintf("Hessian inversion failed at site '%s'.", loc_name))
+      converged[i] <- FALSE
+      next
+    }
 
     if (log_scale) {
       # Transform scale -> log(scale) via delta method

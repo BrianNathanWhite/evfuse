@@ -141,3 +141,67 @@ taper_W <- function(W_bs, D, lambda, p = 3) {
   T_tap <- build_taper(D, lambda, p = p)
   W_bs * T_tap
 }
+
+#' Embed W_tap into full 6-dimensional parameter space
+#'
+#' The bootstrap produces a 387x387 matrix (L sites x 3 observed params).
+#' This function embeds it into the 774x774 space (L sites x 6 params)
+#' required by the stage 2 model. NOAA sites map to dims 1-3, ADCIRC sites
+#' map to dims 4-6.
+#'
+#' @param W_tap Tapered bootstrap covariance (L*3 x L*3).
+#' @param dat Data object with site information.
+#' @return Embedded covariance matrix (L*6 x L*6).
+#' @export
+embed_W <- function(W_tap, dat) {
+  L <- dat$n_sites
+  p_obs <- 3  # observed params per site
+  p_full <- 6  # full params in model
+
+  # Build mapping from W_tap indices to full 774-dim indices
+  # W_tap ordering: param-major with 3 params
+  #   indices 1:L = param 1 at all sites
+  #   indices (L+1):(2L) = param 2 at all sites
+  #   indices (2L+1):(3L) = param 3 at all sites
+  #
+  # Full 774-dim ordering: param-major with 6 params
+  #   NOAA sites: params 1-3 stay at same relative positions
+
+  #   ADCIRC sites: params 1-3 map to params 4-6 (shift by 3L)
+
+  noaa_idx <- which(dat$sites$data_source == "NOAA")
+  adcirc_idx <- which(dat$sites$data_source == "ADCIRC")
+
+  # Create index mapping: W_tap index -> full index
+  idx_map <- integer(L * p_obs)
+
+  for (j in seq_len(p_obs)) {
+    # W_tap indices for param j: ((j-1)*L + 1) : (j*L)
+    w_start <- (j - 1) * L
+
+    for (i in seq_len(L)) {
+      w_idx <- w_start + i
+
+      if (dat$sites$data_source[i] == "NOAA") {
+        # NOAA: param j stays as param j
+        # Full index: (j-1)*L + i
+        idx_map[w_idx] <- (j - 1) * L + i
+      } else {
+        # ADCIRC: param j becomes param (j+3)
+        # Full index: (j+3-1)*L + i = (j+2)*L + i
+        idx_map[w_idx] <- (j + 2) * L + i
+      }
+    }
+  }
+
+  # Build embedded matrix
+  W_full <- matrix(0, nrow = L * p_full, ncol = L * p_full)
+
+  for (i in seq_len(L * p_obs)) {
+    for (k in seq_len(L * p_obs)) {
+      W_full[idx_map[i], idx_map[k]] <- W_tap[i, k]
+    }
+  }
+
+  W_full
+}

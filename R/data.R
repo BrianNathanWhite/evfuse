@@ -29,6 +29,9 @@ load_data <- function(df) {
          ". Must be 'NOAA' or 'ADCIRC'.")
   }
 
+  # Ensure location is character (numeric IDs cause indexing issues)
+  df$location <- as.character(df$location)
+
   # Check for NA in max_sea_level
   n_na <- sum(is.na(df$max_sea_level))
   if (n_na > 0) {
