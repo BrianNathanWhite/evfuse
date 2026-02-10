@@ -41,10 +41,12 @@ predict_krig <- function(model, new_sites) {
   V_obs <- V_obs + diag(1e-6, nrow(V_obs))
 
   # Cholesky of V_obs for solving
-
   R_obs <- chol(V_obs)
   mu_obs <- rep(beta, each = L)[obs$obs_idx]
   resid <- obs$theta_obs - mu_obs
+
+  # Precompute alpha = V_obs^{-1} resid (constant across prediction sites)
+  alpha <- backsolve(R_obs, backsolve(R_obs, resid, transpose = TRUE))
 
   # Preallocate outputs
   pred_mean <- matrix(NA_real_, n_new, p)
@@ -57,7 +59,6 @@ predict_krig <- function(model, new_sites) {
     Sigma_cross <- Sigma_cross_full[, obs$obs_idx, drop = FALSE]
 
     # Kriging mean: beta + Sigma_cross V_obs^{-1} resid
-    alpha <- backsolve(R_obs, backsolve(R_obs, resid, transpose = TRUE))
     pred_mean[k, ] <- beta + as.vector(Sigma_cross %*% alpha)
 
     # Kriging variance: Sigma_{new,new} - Sigma_cross V_obs^{-1} Sigma_cross^T

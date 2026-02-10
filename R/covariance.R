@@ -69,9 +69,9 @@ build_sigma <- function(A, rho, D, p = 6) {
     inner <- inner + kronecker(E_i, Omega_i)
   }
 
-  # (I_L kron A) %*% inner %*% (I_L kron A)^T
-  I_kron_A <- kronecker(diag(L), A)
-  I_kron_A %*% inner %*% t(I_kron_A)
+  # (A kron I_L) %*% inner %*% (A kron I_L)^T  [parameter-major ordering]
+  A_kron_I <- kronecker(A, diag(L))
+  A_kron_I %*% inner %*% t(A_kron_I)
 }
 
 #' Build the taper matrix for W
