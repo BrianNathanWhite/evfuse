@@ -69,15 +69,26 @@ Sigma_{A,rho} = (I_L ⊗ A) [sum_i (e_i e_i^T ⊗ Omega_i(rho))] (I_L ⊗ A)^T
 ### Validated
 - `load_data()`: 129 sites, 29 NOAA, 100 ADCIRC, 34-43 years
 - Stage 1 GEV fitting: 129/129 sites converge, all vcov matrices PSD
-- Core math tests pass (GEV return levels, Wendland, pack/unpack, gradient check)
-- 31 tests passing
+- Stage 2 `fit_spatial_model()` with analytic gradient and log-rho reparameterization
+- `embed_W()`: maps 387x387 bootstrap covariance into 774x774 space
+- `verify_gradient()`: analytic vs numerical finite-difference check (max rel error ~9e-6)
+- 33 tests passing
 
 ### Key Implementation Notes
 - `extRemes::fevd` returns observed information matrix directly (positive definite), not Hessian of negative log-likelihood
 - Use `solve(fit$results$hessian)` not `solve(-fit$results$hessian)` for vcov
 - Delta method applied for log_sigma transformation: J = diag(1, 1/sigma, 1)
+- **Rho is optimized in log space**: `pack_params` stores `log(rho)`, `unpack_params` exponentiates back. Gradient uses chain rule (`grad_log_rho = grad_rho * rho`). No box constraints needed.
+- **Analytic gradient**: contracts Q = V_inv - alpha*alpha^T with Omega_i into 6x6 H matrices. dSigma/dA_{ab} and dSigma/drho_k are rank-1 Kronecker products, so each gradient component is a dot product on H. See `data-raw/evfuse_gradient.pdf`.
+- **Sigma_obs built directly** in 387x387 observed space, never forming the full 774x774 matrix.
+- **nll/nll_grad share a cache** keyed on the parameter vector to avoid redundant Cholesky when L-BFGS-B calls fn then gr at the same point.
+
+### Saved Models
+- `data-raw/model_6dim.rds`: current best fit (NLL = -77.52, convergence 0)
+  - rho = (3052, 260, 893, 362, 870, 1000) — rho[6]=1000 looks stuck
 
 ## Next Steps
 
+- Run `scripts/multi_start.R` to search for better local optima (20 random rho starts, log-uniform [50, 5000] km)
 - Bootstrap for W_tap
-- Stage 2 likelihood implementation
+- Kriging predictions and return level maps
