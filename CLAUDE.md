@@ -30,6 +30,7 @@ Spatial data fusion for extreme value analysis of coastal sea levels along the U
 - data-raw/ — source data (.csv), fitted models (.rds), prediction grid, comparison tables
 - figures/ — all output plots
 - tests/testthat/test-core.R — 33 unit tests
+- evfuse_notes.tex — running working notes with analytical descriptions of all results
 
 ## Data
 - Source: `data-raw/combined_max.csv`
