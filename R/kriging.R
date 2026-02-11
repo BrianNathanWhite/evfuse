@@ -1,22 +1,28 @@
 #' Predict at new locations via universal kriging
 #'
-#' Given the fitted stage 2 model, predict the full 6-dimensional parameter
-#' vector and its covariance at new spatial locations. Then extract the
-#' NOAA components (1-3) and their 3x3 marginal covariance.
+#' Given the fitted stage 2 model, predict the full parameter vector and its
+#' covariance at new spatial locations. Then extract the target components
+#' (default: first source's params, e.g. 1-3 for NOAA) and their marginal covariance.
 #'
 #' @param model A fitted \code{evfuse_model} from \code{fit_spatial_model}.
 #' @param new_sites Data frame with lon and lat columns for prediction locations.
+#' @param predict_params Integer vector of parameter indices to extract for
+#'   predictions (default: first source's params, i.e. \code{1:3}).
 #' @return A list with components:
 #'   \describe{
-#'     \item{pred_mean}{Matrix (n_new x 6) of predicted parameter means.}
-#'     \item{pred_cov}{List of n_new 6x6 predictive covariance matrices.}
-#'     \item{noaa_mean}{Matrix (n_new x 3) of predicted NOAA GEV parameters
-#'       (mu, log_sigma, xi).}
-#'     \item{noaa_cov}{List of n_new 3x3 marginal covariances for NOAA params.}
+#'     \item{pred_mean}{Matrix (n_new x p) of predicted parameter means.}
+#'     \item{pred_cov}{List of n_new pxp predictive covariance matrices.}
+#'     \item{noaa_mean}{Matrix (n_new x length(predict_params)) of predicted
+#'       target GEV parameters (mu, log_sigma, xi).}
+#'     \item{noaa_cov}{List of n_new marginal covariances for target params.}
 #'   }
 #' @export
-predict_krig <- function(model, new_sites) {
-  p <- 6
+predict_krig <- function(model, new_sites, predict_params = NULL) {
+  p <- if (!is.null(model$p)) model$p else 6
+  if (is.null(predict_params)) {
+    predict_params <- if (!is.null(model$dat$source_params))
+      model$dat$source_params[[1]] else 1:3
+  }
   L <- model$dat$n_sites
   n_new <- nrow(new_sites)
 
@@ -67,11 +73,11 @@ predict_krig <- function(model, new_sites) {
     pred_cov[[k]] <- Sigma_new - Sigma_cross %*% solved
   }
 
-  # Extract NOAA components (indices 1:3)
-  noaa_mean <- pred_mean[, 1:3, drop = FALSE]
+  # Extract target components
+  noaa_mean <- pred_mean[, predict_params, drop = FALSE]
   colnames(noaa_mean) <- c("mu", "log_sigma", "xi")
 
-  noaa_cov <- lapply(pred_cov, function(V) V[1:3, 1:3])
+  noaa_cov <- lapply(pred_cov, function(V) V[predict_params, predict_params])
 
   structure(
     list(

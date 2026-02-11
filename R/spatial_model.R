@@ -35,11 +35,11 @@ fit_spatial_model <- function(stage1, dat, W_tap, D,
                                control = list(maxit = 1000, trace = 1),
                                check_gradient = FALSE) {
   L <- dat$n_sites
-  p <- 6  # total parameters: 3 NOAA + 3 ADCIRC
+  p <- if (!is.null(dat$p)) dat$p else 6
 
-  # Embed W_tap from observed 3-param space (L*3 x L*3) into full 6-param space (L*6 x L*6)
-  # NOAA sites' measurement error maps to params 1-3, ADCIRC to params 4-6, cross terms zero
-  if (nrow(W_tap) == L * 3) {
+  # Embed W_tap from observed-param space into full param space if needed
+  p_obs <- length(dat$source_params[[1]])  # params per source
+  if (nrow(W_tap) == L * p_obs && p_obs < p) {
     W_tap <- embed_W(W_tap, dat)
   }
 
@@ -241,7 +241,8 @@ fit_spatial_model <- function(stage1, dat, W_tap, D,
       D = D,
       dat = dat,
       stage1 = stage1,
-      optim_result = result
+      optim_result = result,
+      p = p
     ),
     class = "evfuse_model"
   )
@@ -301,7 +302,8 @@ verify_gradient <- function(par, fn, gr, eps = 1e-5) {
 #' @keywords internal
 build_observation_structure <- function(stage1, dat) {
   L <- dat$n_sites
-  p <- 6
+  source_params <- if (!is.null(dat$source_params)) dat$source_params
+                   else list(NOAA = 1:3, ADCIRC = 4:6)
 
   obs_idx <- c()
   theta_obs <- c()
@@ -309,13 +311,8 @@ build_observation_structure <- function(stage1, dat) {
   for (i in seq_len(L)) {
     if (!stage1$converged[i]) next
 
-    if (dat$sites$data_source[i] == "NOAA") {
-      # Observe parameters 1, 2, 3 (mu_N, log_sigma_N, xi_N)
-      param_indices <- 1:3
-    } else {
-      # Observe parameters 4, 5, 6 (mu_A, log_sigma_A, xi_A)
-      param_indices <- 4:6
-    }
+    src <- dat$sites$data_source[i]
+    param_indices <- source_params[[src]]
 
     # In the full Lp vector with parameter-major ordering:
     # param j at site i -> index (j-1)*L + i
@@ -372,17 +369,18 @@ unpack_params <- function(par, p = 6) {
 #' @param p Dimension (default 6).
 #' @return Named list with beta, A, rho.
 #' @keywords internal
-default_start <- function(stage1, dat, p = 6) {
-  # beta: mean of observed parameters per component
-  beta <- rep(0, p)
-  noaa_idx <- which(dat$sites$data_source == "NOAA" & stage1$converged)
-  adcirc_idx <- which(dat$sites$data_source == "ADCIRC" & stage1$converged)
+default_start <- function(stage1, dat, p = NULL) {
+  source_params <- if (!is.null(dat$source_params)) dat$source_params
+                   else list(NOAA = 1:3, ADCIRC = 4:6)
+  if (is.null(p)) p <- max(unlist(source_params))
 
-  if (length(noaa_idx) > 0) {
-    beta[1:3] <- colMeans(stage1$theta_hat[noaa_idx, , drop = FALSE])
-  }
-  if (length(adcirc_idx) > 0) {
-    beta[4:6] <- colMeans(stage1$theta_hat[adcirc_idx, , drop = FALSE])
+  # beta: mean of observed parameters per source component
+  beta <- rep(0, p)
+  for (src in names(source_params)) {
+    src_idx <- which(dat$sites$data_source == src & stage1$converged)
+    if (length(src_idx) > 0) {
+      beta[source_params[[src]]] <- colMeans(stage1$theta_hat[src_idx, , drop = FALSE])
+    }
   }
 
   # A: start with small diagonal

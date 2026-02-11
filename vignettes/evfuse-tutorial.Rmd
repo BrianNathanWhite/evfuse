@@ -1,0 +1,149 @@
+---
+title: "Spatial Data Fusion for Extreme Sea Levels"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spatial Data Fusion for Extreme Sea Levels}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+## Overview
+
+The `evfuse` package implements a two-stage frequentist framework for fusing
+multiple spatial data sources that have extreme value (GEV) margins. The
+approach follows Russell et al. (2019):
+
+1. **Stage 1**: Fit GEV distributions independently at each site.
+2. **Stage 2**: Fit a joint multivariate Gaussian process that models
+   cross-source dependence via a coregionalization (LMC) structure.
+3. **Kriging**: Predict at new locations, leveraging information from all
+   sources even when each source only observes a subset of the parameters.
+4. **Return levels**: Estimate r-year return levels with uncertainty via the
+   delta method.
+
+## Data
+
+The package includes `gulf_data`, a dataset of annual maximum sea levels at
+129 sites along the U.S. Gulf and Atlantic coasts: 29 NOAA tidal gauge
+stations and 100 ADCIRC numerical simulation points.
+
+```{r load-data}
+library(evfuse)
+data(gulf_data)
+
+gulf_data$n_sites
+# [1] 129
+
+head(gulf_data$sites)
+```
+
+## Stage 1: GEV Fitting
+
+Fit GEV(mu, sigma, xi) at each site via maximum likelihood. Parameters are
+stored as (mu, log sigma, xi) for unconstrained optimization.
+
+```{r stage1}
+stage1 <- fit_gev_all(gulf_data)
+sum(stage1$converged)
+# [1] 129
+```
+
+## Bootstrap Measurement Uncertainty
+
+Estimate the covariance of the Stage 1 MLEs via nonparametric block
+bootstrap (resampling years to preserve spatial dependence within each data
+source). Apply Wendland tapering to enforce sparsity.
+
+```{r bootstrap}
+D <- compute_distances(gulf_data$sites)
+bs <- bootstrap_W(gulf_data, B = 500, seed = 42)
+W_tap <- taper_W(bs$W_bs, D, lambda = 300)
+```
+
+## Stage 2: Joint Spatial Model
+
+The joint model has p=6 dimensions (3 per source) with parameters:
+
+- **beta** (6x1): Mean vector for (mu_NOAA, log_sigma_NOAA, xi_NOAA,
+  mu_ADCIRC, log_sigma_ADCIRC, xi_ADCIRC).
+- **A** (6x6 lower triangular): Cross-covariance factor such that the
+  inter-parameter covariance at distance 0 is A A^T.
+- **rho** (6x1): Range parameters for the 6 latent exponential
+  correlation functions.
+
+The observed parameter vector theta_hat ~ N(beta x 1_L, Sigma + W_tap),
+where each site contributes only its observed dimensions (NOAA: 1-3,
+ADCIRC: 4-6).
+
+```{r stage2}
+model <- fit_spatial_model(stage1, gulf_data, W_tap, D,
+                           control = list(maxit = 2000, trace = 0))
+model$optim_result$convergence
+# [1] 0
+```
+
+## Kriging and Return Levels
+
+Predict at new locations. The kriging predictor fuses information from both
+NOAA and ADCIRC observations to produce NOAA-scale GEV parameters with
+reduced uncertainty.
+
+```{r predict}
+grid <- read.csv("data-raw/prediction_grid.csv")
+preds <- predict_krig(model, grid)
+rl <- compute_return_levels(preds, r = 100)
+
+# 100-year return levels at first 5 grid points
+head(rl$return_level, 5)
+```
+
+## Model Validation: Leave-One-Out CV
+
+The closed-form block LOO-CV (Rasmussen & Williams, 2006, eq. 5.12) evaluates
+predictive performance at each NOAA site without refitting.
+
+```{r loo}
+loo <- loo_cv(model)
+sum_loo <- loo_summary(loo, r = 100)
+
+# Total log predictive density
+sum_loo$total_lpd
+
+# 100-year return level RMSE
+sum_loo$rl_rmse
+```
+
+## Custom Data Sources
+
+The `source_params` argument generalizes the framework beyond NOAA/ADCIRC.
+Each entry maps a data source name to its parameter indices in the joint
+model:
+
+```{r custom, eval = FALSE}
+# Example: 3 sources, each observing 3 GEV parameters
+dat <- load_data(df, source_params = list(
+  gauge    = 1:3,
+  satellite = 4:6,
+  reanalysis = 7:9
+))
+
+# Fit a 9-dimensional joint model
+model <- fit_spatial_model(stage1, dat, W_tap, D)
+```
+
+## References
+
+Russell, B. T., Cooley, D. S., Porter, W. C., Reich, B. J., & Heald, C. L.
+(2019). Data fusion for environmental and human health applications.
+*International Statistical Review*, 87, S261--S287.
+
+Rasmussen, C. E. & Williams, C. K. I. (2006). *Gaussian Processes for Machine
+Learning*. MIT Press.

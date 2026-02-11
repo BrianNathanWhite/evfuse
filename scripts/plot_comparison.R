@@ -34,17 +34,17 @@ states_sf <- st_sf(geometry = states_sf)
 
 crs_albers <- st_crs(5070)
 
-theme_map <- theme_minimal(base_size = 11) +
+theme_map <- theme_minimal(base_size = 14) +
   theme(
     axis.title = element_blank(),
-    axis.text = element_text(size = 8, color = "grey40"),
+    axis.text = element_text(size = 10, color = "grey40"),
     panel.grid = element_blank(),
     legend.position = "right",
-    legend.title = element_text(size = 10),
-    legend.text = element_text(size = 9),
+    legend.title = element_text(size = 12),
+    legend.text = element_text(size = 11),
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA),
-    plot.title = element_text(size = 12, hjust = 0.5)
+    plot.title = element_text(size = 14, hjust = 0.5)
   )
 
 map_coord <- function() {
@@ -149,13 +149,13 @@ make_rl_panel <- function(rl_df, title) {
   ggplot() +
     basemap +
     geom_sf(data = pts, aes(color = return_level),
-            size = 0.9, shape = 16, alpha = 0.7) +
+            size = 1.2, shape = 16, alpha = 0.7) +
     scale_color_viridis_c(option = "inferno", begin = 0.1, end = 0.95,
                           name = "RL (m)", limits = rl_lims) +
     map_coord() +
     labs(title = title) +
     theme_map +
-    theme(legend.key.height = unit(0.8, "cm"))
+    theme(legend.key.height = unit(1.2, "cm"))
 }
 
 p1a <- make_rl_panel(rl_joint, "Joint (6-dim)")
@@ -164,7 +164,7 @@ p1c <- make_rl_panel(rl_adcirc, "ADCIRC-only")
 
 p1 <- grid.arrange(p1a, p1b, p1c, nrow = 1)
 ggsave("figures/comparison_return_levels.png", p1,
-       width = 16, height = 6, dpi = 300, bg = "white")
+       width = 16, height = 5.5, dpi = 300, bg = "white")
 cat("Saved figures/comparison_return_levels.png\n")
 
 # ══════════════════════════════════════════════════════════════
@@ -178,13 +178,13 @@ make_se_panel <- function(rl_df, title) {
   ggplot() +
     basemap +
     geom_sf(data = pts, aes(color = se_delta),
-            size = 0.9, shape = 16, alpha = 0.7) +
+            size = 1.2, shape = 16, alpha = 0.7) +
     scale_color_viridis_c(option = "inferno", name = "SE (m)",
                           limits = se_lims) +
     map_coord() +
     labs(title = title) +
     theme_map +
-    theme(legend.key.height = unit(0.8, "cm"))
+    theme(legend.key.height = unit(1.2, "cm"))
 }
 
 p2a <- make_se_panel(rl_joint, "Joint (6-dim)")
@@ -193,7 +193,7 @@ p2c <- make_se_panel(rl_adcirc, "ADCIRC-only")
 
 p2 <- grid.arrange(p2a, p2b, p2c, nrow = 1)
 ggsave("figures/comparison_se.png", p2,
-       width = 16, height = 6, dpi = 300, bg = "white")
+       width = 16, height = 5.5, dpi = 300, bg = "white")
 cat("Saved figures/comparison_se.png\n")
 
 # ══════════════════════════════════════════════════════════════
@@ -210,7 +210,7 @@ ratio_pts <- st_as_sf(ratio_df, coords = c("lon", "lat"), crs = 4326)
 p3 <- ggplot() +
   basemap +
   geom_sf(data = ratio_pts, aes(color = ratio),
-          size = 0.9, shape = 16, alpha = 0.7) +
+          size = 1.2, shape = 16, alpha = 0.7) +
   scale_color_viridis_c(option = "plasma", begin = 0.05, end = 0.95,
                         name = "SE ratio",
                         limits = range(ratio_df$ratio)) +
@@ -237,7 +237,7 @@ rl_ratio_pts <- st_as_sf(rl_ratio_df, coords = c("lon", "lat"), crs = 4326)
 p3b <- ggplot() +
   basemap +
   geom_sf(data = rl_ratio_pts, aes(color = ratio),
-          size = 0.9, shape = 16, alpha = 0.7) +
+          size = 1.2, shape = 16, alpha = 0.7) +
   scale_color_gradient2(low = "#2166AC", mid = "white", high = "#B2182B",
                         midpoint = 1, limits = c(0.8, 1.3),
                         oob = scales::squish,

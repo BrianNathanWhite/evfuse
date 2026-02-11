@@ -18,10 +18,16 @@
 #' @export
 loo_cv <- function(model, ...) UseMethod("loo_cv")
 
+#' @param loo_source Which data source to evaluate LOO-CV at (default: first
+#'   source in \code{source_params}, typically \code{"NOAA"}).
 #' @export
-loo_cv.evfuse_model <- function(model, ...) {
+loo_cv.evfuse_model <- function(model, loo_source = NULL, ...) {
   L <- model$dat$n_sites
-  p <- 6
+  p <- if (!is.null(model$p)) model$p else 6
+  source_params <- if (!is.null(model$dat$source_params)) model$dat$source_params
+                   else list(NOAA = 1:3, ADCIRC = 4:6)
+  if (is.null(loo_source)) loo_source <- names(source_params)[1]
+  p_block <- length(source_params[[loo_source]])
 
   obs <- build_observation_structure(model$stage1, model$dat)
   n_obs <- length(obs$obs_idx)
@@ -37,16 +43,16 @@ loo_cv.evfuse_model <- function(model, ...) {
   V_inv <- chol2inv(R_chol)
   alpha <- V_inv %*% (obs$theta_obs - mu_obs)
 
-  # LOO at each NOAA site
-  noaa_idx <- which(model$dat$sites$data_source == "NOAA")
-  n_noaa <- length(noaa_idx)
+  # LOO at each site of loo_source
+  target_idx <- which(model$dat$sites$data_source == loo_source)
+  n_target <- length(target_idx)
 
-  loo_mean <- matrix(NA_real_, n_noaa, 3)
-  loo_cov  <- vector("list", n_noaa)
-  loo_lpd  <- numeric(n_noaa)
+  loo_mean <- matrix(NA_real_, n_target, p_block)
+  loo_cov  <- vector("list", n_target)
+  loo_lpd  <- numeric(n_target)
 
-  for (k in seq_len(n_noaa)) {
-    site_k <- noaa_idx[k]
+  for (k in seq_len(n_target)) {
+    site_k <- target_idx[k]
     block_idx <- which(obs_site == site_k)
 
     V_inv_BB <- V_inv[block_idx, block_idx]
@@ -59,7 +65,7 @@ loo_cv.evfuse_model <- function(model, ...) {
     # Log predictive density: log N(y_B; mu_LOO, Sigma_LOO)
     resid_k <- obs$theta_obs[block_idx] - loo_mean[k, ]
     R_k <- chol(Sigma_loo)
-    loo_lpd[k] <- -1.5 * log(2 * pi) - sum(log(diag(R_k))) -
+    loo_lpd[k] <- -0.5 * p_block * log(2 * pi) - sum(log(diag(R_k))) -
       0.5 * sum(resid_k * solve(Sigma_loo, resid_k))
   }
 
@@ -69,8 +75,8 @@ loo_cv.evfuse_model <- function(model, ...) {
     list(
       loo_mean = loo_mean,
       loo_cov  = loo_cov,
-      observed = model$stage1$theta_hat[noaa_idx, ],
-      sites    = model$dat$sites[noaa_idx, ],
+      observed = model$stage1$theta_hat[target_idx, ],
+      sites    = model$dat$sites[target_idx, ],
       loo_lpd  = loo_lpd
     ),
     class = "evfuse_loo"
@@ -111,7 +117,7 @@ loo_cv.evfuse_naive_model <- function(model, ...) {
 
     resid_k <- theta_obs[block_idx] - loo_mean[k, ]
     R_k <- chol(Sigma_loo)
-    loo_lpd[k] <- -1.5 * log(2 * pi) - sum(log(diag(R_k))) -
+    loo_lpd[k] <- -0.5 * p * log(2 * pi) - sum(log(diag(R_k))) -
       0.5 * sum(resid_k * solve(Sigma_loo, resid_k))
   }
 

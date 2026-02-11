@@ -46,21 +46,20 @@ bootstrap_W <- function(dat, B = 500, log_scale = TRUE, seed = NULL) {
   # the same time indices at all sites. If sites have different numbers of years,
   # we need to handle this carefully.
   # For now, we require all sites of the same source to have the same number of years.
-  noaa_idx <- which(dat$sites$data_source == "NOAA")
-  adcirc_idx <- which(dat$sites$data_source == "ADCIRC")
+  # Per-source site indices and year counts
+  source_names <- if (!is.null(dat$source_params)) names(dat$source_params) else c("NOAA", "ADCIRC")
+  source_idx <- lapply(source_names, function(s) which(dat$sites$data_source == s))
+  names(source_idx) <- source_names
 
-  T_noaa <- unique(T_per_site[noaa_idx])
-  T_adcirc <- unique(T_per_site[adcirc_idx])
-
-  if (length(T_noaa) > 1) {
-    warning("NOAA sites have differing numbers of years. ",
-            "Using minimum for bootstrap resampling.")
-    T_noaa <- min(T_per_site[noaa_idx])
-  }
-  if (length(T_adcirc) > 1) {
-    warning("ADCIRC sites have differing numbers of years. ",
-            "Using minimum for bootstrap resampling.")
-    T_adcirc <- min(T_per_site[adcirc_idx])
+  T_source <- list()
+  for (s in source_names) {
+    T_s <- unique(T_per_site[source_idx[[s]]])
+    if (length(T_s) > 1) {
+      warning(s, " sites have differing numbers of years. ",
+              "Using minimum for bootstrap resampling.")
+      T_s <- min(T_per_site[source_idx[[s]]])
+    }
+    T_source[[s]] <- T_s
   }
 
   # Total parameter vector length: n_sites * 3 (mu, log_sigma, xi per site)
@@ -69,20 +68,16 @@ bootstrap_W <- function(dat, B = 500, log_scale = TRUE, seed = NULL) {
   n_failures <- 0
 
   for (b in seq_len(B)) {
-    # Resample years separately for NOAA and ADCIRC
-    # (they may have different time spans)
-    noaa_years <- sample.int(T_noaa, replace = TRUE)
-    adcirc_years <- sample.int(T_adcirc, replace = TRUE)
+    # Resample years separately per source (they may have different time spans)
+    year_idx <- lapply(source_names, function(s) sample.int(T_source[[s]], replace = TRUE))
+    names(year_idx) <- source_names
 
     theta_b <- rep(NA_real_, Lp)
 
     for (i in seq_len(n)) {
       x <- dat$maxima[[i]]
-      if (dat$sites$data_source[i] == "NOAA") {
-        x_boot <- x[noaa_years]
-      } else {
-        x_boot <- x[adcirc_years]
-      }
+      src <- dat$sites$data_source[i]
+      x_boot <- x[year_idx[[src]]]
 
       fit <- tryCatch(
         extRemes::fevd(x_boot, type = "GEV", method = "MLE"),
@@ -142,55 +137,41 @@ taper_W <- function(W_bs, D, lambda, p = 3) {
   W_bs * T_tap
 }
 
-#' Embed W_tap into full 6-dimensional parameter space
+#' Embed W_tap into full parameter space
 #'
-#' The bootstrap produces a 387x387 matrix (L sites x 3 observed params).
-#' This function embeds it into the 774x774 space (L sites x 6 params)
-#' required by the stage 2 model. NOAA sites map to dims 1-3, ADCIRC sites
-#' map to dims 4-6.
+#' The bootstrap produces a covariance matrix in observed-parameter space
+#' (L sites x p_obs params per site). This function embeds it into the full
+#' joint parameter space (L sites x p_full params) required by the stage 2 model.
+#' Each source's observed params are mapped to their corresponding positions
+#' in the joint model via \code{source_params}.
 #'
-#' @param W_tap Tapered bootstrap covariance (L*3 x L*3).
-#' @param dat Data object with site information.
-#' @return Embedded covariance matrix (L*6 x L*6).
+#' @param W_tap Tapered bootstrap covariance (L*p_obs x L*p_obs).
+#' @param dat Data object with site information and \code{source_params}.
+#' @param source_params Named list mapping source labels to full-model param
+#'   indices. Default: \code{list(NOAA = 1:3, ADCIRC = 4:6)}.
+#' @return Embedded covariance matrix (L*p_full x L*p_full).
 #' @export
-embed_W <- function(W_tap, dat) {
+embed_W <- function(W_tap, dat, source_params = NULL) {
   L <- dat$n_sites
-  p_obs <- 3  # observed params per site
-  p_full <- 6  # full params in model
+  if (is.null(source_params)) {
+    source_params <- if (!is.null(dat$source_params)) dat$source_params
+                     else list(NOAA = 1:3, ADCIRC = 4:6)
+  }
+  p_obs <- length(source_params[[1]])  # observed params per site (all sources same)
+  p_full <- max(unlist(source_params))
 
-  # Build mapping from W_tap indices to full 774-dim indices
-  # W_tap ordering: param-major with 3 params
-  #   indices 1:L = param 1 at all sites
-  #   indices (L+1):(2L) = param 2 at all sites
-  #   indices (2L+1):(3L) = param 3 at all sites
-  #
-  # Full 774-dim ordering: param-major with 6 params
-  #   NOAA sites: params 1-3 stay at same relative positions
-
-  #   ADCIRC sites: params 1-3 map to params 4-6 (shift by 3L)
-
-  noaa_idx <- which(dat$sites$data_source == "NOAA")
-  adcirc_idx <- which(dat$sites$data_source == "ADCIRC")
-
-  # Create index mapping: W_tap index -> full index
+  # Build mapping from W_tap indices to full-space indices
+  # W_tap ordering: param-major with p_obs params
+  # Full ordering: param-major with p_full params
   idx_map <- integer(L * p_obs)
 
   for (j in seq_len(p_obs)) {
-    # W_tap indices for param j: ((j-1)*L + 1) : (j*L)
     w_start <- (j - 1) * L
-
     for (i in seq_len(L)) {
       w_idx <- w_start + i
-
-      if (dat$sites$data_source[i] == "NOAA") {
-        # NOAA: param j stays as param j
-        # Full index: (j-1)*L + i
-        idx_map[w_idx] <- (j - 1) * L + i
-      } else {
-        # ADCIRC: param j becomes param (j+3)
-        # Full index: (j+3-1)*L + i = (j+2)*L + i
-        idx_map[w_idx] <- (j + 2) * L + i
-      }
+      src <- dat$sites$data_source[i]
+      full_param <- source_params[[src]][j]
+      idx_map[w_idx] <- (full_param - 1) * L + i
     }
   }
 
