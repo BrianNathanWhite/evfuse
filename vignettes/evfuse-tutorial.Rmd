@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 The `evfuse` package implements a two-stage frequentist framework for fusing
 sparse observations and dense simulations for spatial extreme value analysis
-(White et al., 2025). While developed for U.S. coastal sea levels (NOAA
+(White et al., in preparation). While developed for U.S. coastal sea levels (NOAA
 tidal gauges + ADCIRC simulations), the framework applies to any setting with
 annual maxima from multiple spatial data sources.
 
@@ -143,9 +143,9 @@ model <- fit_spatial_model(stage1, dat, W_tap, D)
 
 ## References
 
-White, B. N., Blanton, B., Luettich, R., & Smith, R. L. (2025). Fusing
-Sparse Observations and Dense Simulations for Spatial Extreme Value
-Analysis: Application to U.S. Coastal Sea Levels.
+White, B. N., Blanton, B., Luettich, R., & Smith, R. L. Fusing Sparse
+Observations and Dense Simulations for Spatial Extreme Value Analysis:
+Application to U.S. Coastal Sea Levels. *In preparation.*
 
 Russell, B. T., Cooley, D. S., Porter, W. C., Reich, B. J., & Heald, C. L.
 (2019). Data fusion for environmental and human health applications.

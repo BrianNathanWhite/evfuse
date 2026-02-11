@@ -11,7 +11,7 @@ Description: Two-stage frequentist framework for fusing sparse observations
     extreme value (GEV) distributions independently at each site, then models
     the site-level parameter estimates jointly via a linear model of
     coregionalization with a selection matrix that accommodates partial
-    observations. Developed for U.S. coastal sea levels (White et al., 2025)
+    observations. Developed for U.S. coastal sea levels (White et al.)
     but applicable to any setting where annual maxima from multiple spatial
     data sources can be fused.
 License: MIT + file LICENSE

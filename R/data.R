@@ -16,7 +16,7 @@
 #'   \item{p}{6}
 #' }
 #' @source NOAA CO-OPS tidal gauges and ADCIRC storm surge simulations.
-#'   See White et al. (2025) for details.
+#'   See White et al. for details.
 "gulf_data"
 
 #' Load and validate sea level data

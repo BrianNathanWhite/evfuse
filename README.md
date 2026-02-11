@@ -3,9 +3,9 @@
 Fusing sparse observations and dense simulations for spatial extreme value
 analysis. Implements the two-stage frequentist framework from:
 
-> White, B. N., Blanton, B., Luettich, R., & Smith, R. L. (2025). Fusing
-> Sparse Observations and Dense Simulations for Spatial Extreme Value
-> Analysis: Application to U.S. Coastal Sea Levels.
+> White, B. N., Blanton, B., Luettich, R., & Smith, R. L. Fusing Sparse
+> Observations and Dense Simulations for Spatial Extreme Value Analysis:
+> Application to U.S. Coastal Sea Levels. *In preparation.*
 
 The package was developed for fusing NOAA tidal gauge observations with
 ADCIRC hydrodynamic simulations of coastal sea levels, but the framework is
@@ -94,9 +94,9 @@ at sparse observation locations.
 
 ## References
 
-White, B. N., Blanton, B., Luettich, R., & Smith, R. L. (2025). Fusing
-Sparse Observations and Dense Simulations for Spatial Extreme Value
-Analysis: Application to U.S. Coastal Sea Levels.
+White, B. N., Blanton, B., Luettich, R., & Smith, R. L. Fusing Sparse
+Observations and Dense Simulations for Spatial Extreme Value Analysis:
+Application to U.S. Coastal Sea Levels. *In preparation.*
 
 Russell, B. T., Cooley, D. S., Porter, W. C., Reich, B. J., & Heald, C. L.
 (2019). Data fusion for environmental and human health applications.
