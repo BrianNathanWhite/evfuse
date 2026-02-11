@@ -9,3 +9,4 @@ src/*.o
 src/*.so
 man/*.Rd
 data-raw
+Rplots.pdf
