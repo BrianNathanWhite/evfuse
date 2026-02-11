@@ -1,13 +1,19 @@
 Package: evfuse
 Title: Spatial Data Fusion for Extreme Value Analysis
 Version: 0.1.0
-Authors@R: person("Brian", "White", email = "bwhite@wakehealth.edu", role = c("aut", "cre"))
-Description: Two-stage frequentist framework for fusing multiple spatial data
-    sources with extreme value margins. Fits pointwise GEV distributions at
-    observed sites, then estimates a multivariate Gaussian process with
-    coregionalization structure via maximum likelihood. Supports kriging with
-    partial observations, return level estimation, and uncertainty quantification
-    via delta method and simulation.
+Authors@R: c(
+    person("Brian N.", "White", email = "bnw@unc.edu", role = c("aut", "cre")),
+    person("Brian", "Blanton", role = "aut"),
+    person("Rick", "Luettich", role = "aut"),
+    person("Richard L.", "Smith", role = "aut"))
+Description: Two-stage frequentist framework for fusing sparse observations
+    and dense simulations for spatial extreme value analysis. Fits generalized
+    extreme value (GEV) distributions independently at each site, then models
+    the site-level parameter estimates jointly via a linear model of
+    coregionalization with a selection matrix that accommodates partial
+    observations. Developed for U.S. coastal sea levels (White et al., 2025)
+    but applicable to any setting where annual maxima from multiple spatial
+    data sources can be fused.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

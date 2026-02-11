@@ -18,8 +18,10 @@ knitr::opts_chunk$set(
 ## Overview
 
 The `evfuse` package implements a two-stage frequentist framework for fusing
-multiple spatial data sources that have extreme value (GEV) margins. The
-approach follows Russell et al. (2019):
+sparse observations and dense simulations for spatial extreme value analysis
+(White et al., 2025). While developed for U.S. coastal sea levels (NOAA
+tidal gauges + ADCIRC simulations), the framework applies to any setting with
+annual maxima from multiple spatial data sources.
 
 1. **Stage 1**: Fit GEV distributions independently at each site.
 2. **Stage 2**: Fit a joint multivariate Gaussian process that models
@@ -140,6 +142,10 @@ model <- fit_spatial_model(stage1, dat, W_tap, D)
 ```
 
 ## References
+
+White, B. N., Blanton, B., Luettich, R., & Smith, R. L. (2025). Fusing
+Sparse Observations and Dense Simulations for Spatial Extreme Value
+Analysis: Application to U.S. Coastal Sea Levels.
 
 Russell, B. T., Cooley, D. S., Porter, W. C., Reich, B. J., & Heald, C. L.
 (2019). Data fusion for environmental and human health applications.
