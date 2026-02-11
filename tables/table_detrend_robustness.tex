@@ -1,0 +1,29 @@
+\begin{table}[t]
+\centering
+\caption{Sensitivity of fusion performance to nonstationarity treatment at Stage~1.
+The detrended pipeline fits $\mu(t) = \mu_0 + \mu_1(t - 2000)$ at NOAA sites
+and uses $\mu_0$ as the Stage~1 location estimate. LOO-CV is evaluated at
+all 29 NOAA sites via the Rasmussen \& Williams (2006) closed-form shortcut.}
+\label{tab:detrend_robustness}
+\begin{tabular}{lcc}
+\toprule
+Metric & Stationary & Detrended ($t_{\mathrm{ref}} = 2000$) \\
+\midrule
+\multicolumn{3}{l}{\textit{Cross-source correlations}} \\
+\quad $\mathrm{Cor}(\mu_N, \mu_A)$ & 0.992 & 0.991 \\
+\quad $\mathrm{Cor}(\log\sigma_N, \log\sigma_A)$ & 0.521 & 0.533 \\
+\quad $\mathrm{Cor}(\xi_N, \xi_A)$ & 0.952 & 0.808 \\
+\midrule
+\multicolumn{3}{l}{\textit{LOO log predictive density (higher is better)}} \\
+\quad NOAA-only total LPD & $-2.5$ & $-8.5$ \\
+\quad Joint total LPD & $30.0$ & $23.0$ \\
+\quad LPD gain (Joint $-$ NOAA) & $32.4$ & $31.5$ \\
+\quad Joint wins (out of 29) & 28 & 28 \\
+\midrule
+\multicolumn{3}{l}{\textit{100-year return level LOO-CV}} \\
+\quad RL RMSE, NOAA-only (m) & 0.624 & 0.724 \\
+\quad RL RMSE, Joint (m) & 0.406 & 0.473 \\
+\quad RL RMSE reduction (\%) & 34.9 & 34.7 \\
+\bottomrule
+\end{tabular}
+\end{table}
