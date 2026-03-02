@@ -1,0 +1,36 @@
+══════════════════════════════════════════════════════════════
+GRADIENT BENCHMARK: ANALYTIC vs NUMERICAL
+══════════════════════════════════════════════════════════════
+
+Problem: 387 observations, 33 parameters
+Starting NLL: -88.8666 (production optimum: -96.2741)
+
+--- Single-start comparison ---
+
+                                 Analytic    Numerical   Num (5000)
+                                  (Run A)      (Run B)      (Run C)
+---                                   ---          ---          ---
+Wall time (s)                         6.4        213.7        208.3
+Function evaluations                  247          252          252
+Gradient evaluations                  247          252          252
+Final NLL                        -96.2741     -96.2741     -96.2741
+Convergence (0=success)                 0            0            0
+Per-iteration time (s)              0.026        0.848        0.826
+
+|NLL_A - NLL_x|                        --     5.35e-06     5.35e-06
+max |par_A - par_x|                    --     7.22e-03     7.22e-03
+Total speedup (vs A)                   --         33.1x         32.3x
+Per-iteration cost ratio               --         32.5x         31.7x
+
+Run C converged after 252 gradient evaluations (208.3 s).
+  Same optimum as analytic: YES (NLL diff = 5.35e-06)
+
+--- Multi-start comparison (3 starts) ---
+
+                                 Analytic    Numerical
+---                                   ---          ---
+Total time (s)                       27.6        814.4
+Best NLL                         -96.0640     -96.0640
+Multi-start speedup                  29.5x
+Extrapolated 20-start (s)           183.9       5429.6
+Extrapolated 20-start (min)           3.1         90.5

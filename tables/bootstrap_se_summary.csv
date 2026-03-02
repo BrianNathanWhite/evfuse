@@ -1,0 +1,7 @@
+parameter,source,median,min,max
+mu,NOAA,0.0352,0.0136,0.6635
+mu,ADCIRC,0.0199,0.0074,0.3085
+log_sigma,NOAA,0.2193,0.1108,0.9137
+log_sigma,ADCIRC,0.1649,0.1035,0.5049
+xi,NOAA,0.2094,0.1458,0.5587
+xi,ADCIRC,0.1671,0.1114,0.3540

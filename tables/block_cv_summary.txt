@@ -1,0 +1,79 @@
+
+======================================================================
+  Geographic Block Cross-Validation Summary
+======================================================================
+  K = 5 blocks, 29 NOAA sites, 100 ADCIRC sites always retained
+
+  Block definitions:
+    Block 1 (Gulf Coast): 4 sites -- 8775870, 8761724, 8735180, 8729840
+    Block 2 (Florida): 5 sites -- 8727520, 8724580, 8725110, 8720030, 8723970
+    Block 3 (Southeast): 5 sites -- 8670870, 8665530, 8661070, 8656483, 8651370
+    Block 4 (Mid-Atlantic): 6 sites -- 8635750, 8557380, 8536110, 8534720, 8518750, 8531680
+    Block 5 (New England): 9 sites -- 8467150, 8461490, 8510560, 8443970, 8447930, 8418150, 8449130, 8413320, 8410140
+
+----------------------------------------------------------------------
+  Parameter Prediction Accuracy at 29 NOAA Sites (Block CV)
+----------------------------------------------------------------------
+  Parameter          J_RMSE     N_RMSE      J_MAD      N_MAD
+  ---------          ------     ------      -----      -----
+  mu                 0.2346     0.7912     0.1667     0.5427
+  log_sigma          0.3123     0.2613     0.2436     0.2134
+  xi                 0.1574     0.2123     0.1301     0.1713
+
+----------------------------------------------------------------------
+  100-Year Return Level Accuracy (Block CV)
+----------------------------------------------------------------------
+  Model                RMSE        MAD    Mean SE
+  -----                ----        ---    -------
+  Joint              0.6024     0.4091     0.2093
+  NOAA-only          0.7480     0.5444     0.5614
+
+----------------------------------------------------------------------
+  Log Predictive Density (Block CV)
+----------------------------------------------------------------------
+  Model             Total LPD     Mean LPD
+  -----             ---------     --------
+  Joint               -209.86      -7.2365
+  NOAA-only        -441596.07  -15227.4505
+  Gain (J-N)        441386.21   15220.2140
+
+  Joint better at 20 / 29 sites
+  RL RMSE reduction: 19.5%
+
+  NOTE: NOAA-only Gulf Coast LPD is dominated by near-singular kriging
+  covariance (no retained NOAA sites within ~500 km). The joint model
+  handles this region via ADCIRC coverage. Excluding the Gulf block:
+
+                       All 29 Excl. Gulf (25)
+                       ------ ---------------
+  Joint LPD           -209.86      -169.16
+  NOAA LPD         -441596.07      -361.83
+  Gain (J-N)        441386.21       192.67
+  Joint wins             20/29         16/25
+  RL RMSE red.          19.5%        48.5%
+
+----------------------------------------------------------------------
+  Per-Block Summary
+----------------------------------------------------------------------
+  Block             n      J_LPD      N_LPD   Joint wins
+  -----            --      -----      -----   ----------
+  Gulf Coast        4     -40.70 -441234.24          4/4
+  Florida           5     -48.98     -47.19          2/5
+  Southeast         5     -12.87     -20.49          3/5
+  Mid-Atlantic      6       4.84       3.95          4/6
+  New England       9    -112.15    -298.09          7/9
+
+----------------------------------------------------------------------
+  Comparison with LOO-CV
+----------------------------------------------------------------------
+  Metric                         LOO-CV     Block CV
+  ------                         ------     --------
+  mu RMSE (Joint)                0.1375       0.2346
+  log_sigma RMSE (Joint)         0.2153       0.3123
+  xi RMSE (Joint)                0.1251       0.1574
+  RL RMSE (Joint)                0.4095       0.6024
+  RL RMSE (NOAA-only)            0.6243       0.7480
+  RL RMSE reduction               34.4%        19.5%
+  LPD gain (J-N, excl Gulf)        32.58       192.67
+  Joint wins                      27/29        20/29
+

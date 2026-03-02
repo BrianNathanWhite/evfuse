@@ -1,0 +1,73 @@
+url: https://briannathanwhite.github.io/evfuse/
+
+template:
+  bootstrap: 5
+
+reference:
+  - title: Package
+    contents:
+      - evfuse-package
+
+  - title: Data
+    desc: Load data and compute distance matrices
+    contents:
+      - coast_data
+      - prediction_grid
+      - load_data
+      - compute_distances
+      - compute_cross_distances
+
+  - title: "Stage 1: GEV Fitting"
+    desc: Pointwise generalized extreme value fits
+    contents:
+      - fit_gev_all
+      - fit_gev_detrended
+      - fit_gev_ns
+      - gev_return_level
+      - gev_exceedance_prob
+
+  - title: Bootstrap
+    desc: Measurement uncertainty via block bootstrap
+    contents:
+      - bootstrap_W
+      - bootstrap_W_detrended
+      - bootstrap_W_ns
+      - taper_W
+      - subset_W_bs
+      - embed_W
+
+  - title: Covariance
+    desc: Spatial covariance and tapering functions
+    contents:
+      - exp_cov_matrix
+      - wendland2
+      - wendland_taper_matrix
+      - build_sigma
+      - build_taper
+
+  - title: "Stage 2: Spatial Model"
+    desc: Joint coregionalization model fitting
+    contents:
+      - fit_spatial_model
+      - fit_naive_model
+      - verify_gradient
+
+  - title: Kriging & Prediction
+    desc: Spatial prediction and return level estimation
+    contents:
+      - predict_krig
+      - predict_krig_naive
+      - compute_return_levels
+      - compute_return_levels_ns
+
+  - title: Validation
+    desc: Leave-one-out cross-validation
+    contents:
+      - loo_cv
+      - loo_summary
+
+  - title: Trend Diagnostics
+    desc: Temporal trend testing
+    contents:
+      - mann_kendall_test
+      - gev_trend_test

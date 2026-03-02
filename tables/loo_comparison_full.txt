@@ -1,0 +1,135 @@
+evfuse: Consolidated LOO-CV Comparison Tables
+==============================================
+Generated: 2026-02-11
+
+Table 1: Model Fit Summary
+----------------------------------------------------------------------
+  Model           Sites   Params          NLL   rho (km)
+  -----           -----   ------          ---   --------
+  Joint             129       33    -103.9522   2773.8, 230.5, 1409, 364.4, 82.4, 220.2
+  NOAA-only          29       12      13.6654   827, 238.5, 1067.9
+  ADCIRC-only       100       12     -75.4886   2218.3, 380.1, 1213.4
+
+
+Table 2: Cross-Source Correlations (from A matrix)
+----------------------------------------------------------------------
+  Parameter pair           Stationary    Detrended
+  --------------           ----------    ---------
+  Cor(mu_N, mu_A)               0.995        0.995
+  Cor(lsig_N, lsig_A)           0.383        0.443
+  Cor(xi_N, xi_A)               0.961        0.837
+
+
+Table 3: LOO-CV — Stationary Pipeline (Joint vs NOAA-only)
+----------------------------------------------------------------------
+
+  Parameter Prediction Accuracy at 29 NOAA Sites
+  Parameter          J_RMSE     N_RMSE      J_MAD      N_MAD
+  ---------          ------     ------      -----      -----
+  mu                 0.1375     0.4342     0.1066     0.2850
+  log_sigma          0.2153     0.2089     0.1460     0.1584
+  xi                 0.1251     0.1455     0.1063     0.1196
+
+  100-Year Return Level Accuracy
+  Model                RMSE        MAD    Mean SE
+  -----                ----        ---    -------
+  Joint              0.4095     0.2912     0.4851
+  NOAA-only          0.6243     0.4488     0.6099
+
+  Log Predictive Density (higher = better)
+  Model             Total LPD     Mean LPD
+  -----             ---------     --------
+  Joint               30.1271       1.0389
+  NOAA-only           -2.4524      -0.0846
+  Gain (J-N)          32.5795       1.1234
+
+  Joint better at 27 / 29 sites
+  RL RMSE reduction: 34.4%
+
+  Sites where NOAA-only wins:
+    8518750: Joint = +0.2879, NOAA = +0.9320, diff = -0.6441
+    8724580: Joint = -1.5916, NOAA = -1.4504, diff = -0.1412
+
+
+Table 4: LOO-CV — Detrended Pipeline (Joint vs NOAA-only, ref=2000)
+----------------------------------------------------------------------
+
+  Parameter Prediction Accuracy at 29 NOAA Sites
+  Parameter          J_RMSE     N_RMSE      J_MAD      N_MAD
+  ---------          ------     ------      -----      -----
+  mu                 0.1421     0.4344     0.1082     0.2777
+  log_sigma          0.2046     0.2045     0.1557     0.1593
+  xi                 0.1470     0.1613     0.1240     0.1332
+
+  100-Year Return Level Accuracy
+  Model                RMSE        MAD    Mean SE
+  -----                ----        ---    -------
+  Joint              0.4670     0.3618     0.6597
+  NOAA-only          0.7244     0.5569     0.6588
+
+  Log Predictive Density (higher = better)
+  Model             Total LPD     Mean LPD
+  -----             ---------     --------
+  Joint               23.8390       0.8220
+  NOAA-only           -8.5290      -0.2941
+  Gain (J-N)          32.3680       1.1161
+
+  Joint better at 28 / 29 sites
+  RL RMSE reduction: 35.5%
+
+  Sites where NOAA-only wins:
+    8518750: Joint = -0.3069, NOAA = +0.8945, diff = -1.2014
+
+
+Table 5: Side-by-Side — Stationary vs Detrended
+----------------------------------------------------------------------
+
+  Model fit
+  Metric                   Stationary    Detrended
+  ------                   ----------    ---------
+  Joint NLL                 -103.9522     -96.2741
+
+  LOO-CV at 29 NOAA sites (joint model)
+  Metric                   Stationary    Detrended
+  ------                   ----------    ---------
+  mu RMSE                      0.1375       0.1421
+  log_sigma RMSE               0.2153       0.2046
+  xi RMSE                      0.1251       0.1470
+  100yr RL RMSE                0.4095       0.4670
+  Total LPD                     30.13        23.84
+  Mean LPD                     1.0389       0.8220
+
+  Joint vs NOAA-only (per pipeline)
+  Metric                   Stationary    Detrended
+  ------                   ----------    ---------
+  Joint wins (LPD)            27 / 29      28 / 29
+  LPD gain (J - N)              32.58        32.37
+  RL RMSE reduction             34.4%        35.5%
+
+
+Table 6: Predictive Calibration — Stationary Joint Model
+----------------------------------------------------------------------
+
+  Coverage (nominal vs. empirical, n = 29)
+  Parameter           50%      80%      95%
+  ---------           ---      ---      ---
+  mu                17/29    26/29    28/29
+  log_sigma         20/29    26/29    29/29
+  xi                20/29    29/29    29/29
+  100-yr RL         19/29    24/29    28/29
+  (expected)         14.5     23.2     27.6
+
+  KS Tests for Uniformity of PIT Values
+  Parameter               D    p-value      n
+  ---------              --    -------     --
+  mu                  0.102      0.892     29
+  log_sigma           0.258      0.034     29
+  xi                  0.171      0.330     29
+  100-yr RL           0.172      0.320     29
+  Combined            0.111      0.214     87
+
+  Nearest-neighbor NOAA -> ADCIRC distances
+    Median: 21.7 km
+    Range:  1.9 - 119.8 km
+    Mean:   25.2 km
+

@@ -1,0 +1,17 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^DEVELOPMENT\.md$
+^REFERENCE\.md$
+^scripts$
+^figures$
+^tables$
+^manuscript$
+^data-raw$
+^\.github$
+^evfuse\.Rcheck$
+^evfuse_.*\.tar\.gz$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^Rplots\.pdf$
+^results$

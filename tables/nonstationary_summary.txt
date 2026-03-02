@@ -1,0 +1,87 @@
+
+════════════════════════════════════════════════════════════════════
+NONSTATIONARY PIPELINE: MANUSCRIPT NUMBERS SUMMARY
+════════════════════════════════════════════════════════════════════
+
+── Model Fit ──────────────────────────────────────────────────────
+Joint 6-dim NLL:    -96.2741 (33 params, 129 sites)
+NOAA-only NLL:      19.9432 (12 params, 29 sites)
+ADCIRC-only NLL:    -75.4886 (12 params, 100 sites)
+Joint rho:          2873.1, 418.2, 1338.9, 187.6, 475.3, 2808.8
+Joint beta:         1.7345, -2.3098, 0.2264, 1.5974, -2.3777, 0.1264
+
+── Cross-Source Correlations ──────────────────────────────────────
+Cor(mu0_N, mu0_A):     0.995
+Cor(log_sig_N, log_sig_A): 0.443
+Cor(xi_N, xi_A):       0.837
+
+── LOO-CV ────────────────────────────────────────────────────────
+Joint:     mu RMSE = 0.1421, RL RMSE = 0.4670, LPD = 23.84
+NOAA-only: mu RMSE = 0.4344, RL RMSE = 0.7244, LPD = -8.53
+Joint wins: 28 / 29
+LPD gain:   32.37
+RL RMSE reduction: 35.5%
+mu RMSE reduction: 67.3%
+Mean SE reduction: 10.4%
+
+Losing LOO sites:
+  8518750: diff = -1.2014
+
+── Block CV ──────────────────────────────────────────────────────
+Joint RL RMSE:     0.6647
+NOAA-only RL RMSE: 0.8097
+RL RMSE reduction: 17.9% (all 29), 36.1% (excl Gulf)
+Joint wins: 24/29 (all), 20/25 (excl Gulf)
+LPD gain (excl Gulf): 74636112.86
+
+── Taper Sensitivity ─────────────────────────────────────────────
+  lambda=150: NLL=-81.5308, RL RMSE=0.4631, reduction=36.1%, LPD gain=30.71
+  lambda=300: NLL=-96.2741, RL RMSE=0.4670, reduction=35.5%, LPD gain=32.37
+  lambda=500: NLL=-105.2497, RL RMSE=0.4669, reduction=35.5%, LPD gain=33.88
+
+── PIT Calibration ───────────────────────────────────────────────
+  mu          : 50%=17/29, 80%=23/29, 95%=28/29
+  log_sigma   : 50%=23/29, 80%=27/29, 95%=28/29
+  xi          : 50%=24/29, 80%=28/29, 95%=29/29
+  100-yr RL   : 50%=19/29, 80%=26/29, 95%=29/29
+
+── Nearest-Neighbor Distances ────────────────────────────────────
+Median NOAA->ADCIRC: 21.7 km
+Range: 1.9 - 119.8 km
+
+── Return Levels ─────────────────────────────────────────────────
+Joint RL range:     [1.280, 4.291] m
+Joint mean SE:      0.2570 m
+NOAA-only mean SE:  0.2870 m
+
+── LOO-CV Parameter RMSE ────────────────────────────────────
+LOO log_sigma RMSE:  Joint=0.2046 NOAA=0.2045
+LOO xi RMSE:         Joint=0.1470 NOAA=0.1613
+
+── KS p-values (PIT uniformity) ─────────────────────────────
+  mu:        p = 0.962
+  log_sigma: p = 0.145
+  xi:        p = 0.220
+  100-yr RL: p = 0.212
+
+── SE Ratio (NOAA-only / Joint, 100-yr RL) ──────────────────
+Median SE ratio:     1.17
+% coastline > 1.5:   24.3%
+
+── Block CV Parameter RMSE ──────────────────────────────────
+Block CV mu RMSE:    Joint=0.2545 NOAA=0.7808
+Block CV logsig RMSE: Joint=0.4063 NOAA=0.2978
+Block CV xi RMSE:    Joint=0.1942 NOAA=0.2131
+log_sig reversal:    NOAA=0.2978 Joint=0.4063 reversal=TRUE
+
+── Taper Sensitivity Correlations ───────────────────────────
+  lambda=150: Cor(mu)=0.995 Cor(logsig)=0.381 Cor(xi)=0.899
+  lambda=300: Cor(mu)=0.995 Cor(logsig)=0.443 Cor(xi)=0.837
+  lambda=500: Cor(mu)=0.994 Cor(logsig)=0.405 Cor(xi)=0.812
+
+── QQ Plot Sites (Figure 1) ─────────────────────────────────
+  Pensacola, FL (8729840):   xi = 0.620
+  Duck Pier, NC (8651370):   xi = -0.004
+  Bridgeport, CT (8467150):  xi = 0.285
+  ADCIRC site 48:            xi = 0.186
+

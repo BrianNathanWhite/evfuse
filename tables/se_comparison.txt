@@ -1,0 +1,19 @@
+SE COMPARISON: Delta Method vs. Simulation (100-year Return Levels)
+Monte Carlo draws: 10000, seed: 123
+
+--- 29 NOAA sites (LOO-CV) ---
+Max |delta - sim|:       51.9954 m
+Max relative diff:       1877.1%
+Median relative diff:    69.4%
+Correlation:             0.8762
+Median ratio (sim/delta): 1.694
+
+--- Prediction grid (948 points) ---
+Max |delta - sim|:       0.0471 m
+Max relative diff:       10.4%
+Median relative diff:    2.7%
+Correlation:             0.9994
+Median ratio (sim/delta): 1.027
+Fraction sim > delta:    98.2%
+
+RECOMMENDATION: Simulation SEs are systematically larger (98% of grid points). They capture nonlinearity in xi that the delta method misses. Consider using simulation SEs.
