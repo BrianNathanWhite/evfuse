@@ -84,11 +84,10 @@ This is the primary bootstrap approach used in the manuscript.</p>
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>A small fraction of bootstrap resamples may produce degenerate data
-that causes warnings or convergence failures in the underlying GEV fitting
-routine (<code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>). This is expected behavior: failed fits are
-recorded in <code>n_failures</code> and handled via pairwise-complete covariance
-estimation. Typical failure rates are well below 1 percent.</p>
+    <p>Some bootstrap resamples will produce degenerate data that fails
+GEV fitting (convergence warnings from <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>). These
+are recorded in <code>n_failures</code> and excluded via pairwise-complete
+covariance estimation. Failure rates are typically well under 1 percent.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
