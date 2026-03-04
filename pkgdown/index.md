@@ -5,7 +5,8 @@ analysis. Implements the two-stage frequentist framework from:
 
 > White, B. N., Blanton, B., Luettich, R., & Smith, R. L. Fusing Sparse
 > Observations and Dense Simulations for Spatial Extreme Value Analysis:
-> Application to U.S. Coastal Sea Levels. *In preparation.*
+> Application to U.S. Coastal Sea Levels. *arXiv preprint*, 2026.
+> [arXiv:2603.03247](https://arxiv.org/abs/2603.03247)
 
 The package was developed for fusing NOAA tidal gauge observations with
 ADCIRC hydrodynamic simulations of coastal sea levels, but the framework is
@@ -202,7 +203,8 @@ for reproducibility (bootstrap: 42, multi-start optimization: 2026).
 
 White, B. N., Blanton, B., Luettich, R., & Smith, R. L. Fusing Sparse
 Observations and Dense Simulations for Spatial Extreme Value Analysis:
-Application to U.S. Coastal Sea Levels. *In preparation.*
+Application to U.S. Coastal Sea Levels. *arXiv preprint*, 2026.
+[arXiv:2603.03247](https://arxiv.org/abs/2603.03247)
 
 Russell, B. T., Risser, M. D., Smith, R. L., & Kunkel, K. E. (2020).
 Investigating the association between late spring Gulf of Mexico sea
