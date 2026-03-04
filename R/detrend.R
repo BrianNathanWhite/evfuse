@@ -143,11 +143,10 @@ fit_gev_detrended <- function(dat, df, ref_year = 2000) {
 #' @param seed Random seed.
 #' @seealso \code{\link{bootstrap_W}} for the stationary version.
 #' @return A list with W_bs, Gamma, and n_failures.
-#' @note A small fraction of bootstrap resamples may produce degenerate data
-#'   that causes warnings or convergence failures in the underlying GEV fitting
-#'   routine (\code{extRemes::fevd}). This is expected behavior: failed fits are
-#'   recorded in \code{n_failures} and handled via pairwise-complete covariance
-#'   estimation. Typical failure rates are well below 1 percent.
+#' @note Some bootstrap resamples will produce degenerate data that fails
+#'   GEV fitting (convergence warnings from \code{extRemes::fevd}). These
+#'   are recorded in \code{n_failures} and excluded via pairwise-complete
+#'   covariance estimation. Failure rates are typically well under 1 percent.
 #' @export
 bootstrap_W_detrended <- function(dat, df, B = 500,
                                    ref_year = 2000, seed = NULL) {

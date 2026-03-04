@@ -21,3 +21,4 @@ scripts/supplementary/
 scripts/regenerate_se_figures.R
 docs/
 REFERENCE.md
+DEVELOPMENT.md
