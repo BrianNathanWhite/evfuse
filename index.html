@@ -240,12 +240,10 @@
 <p>Additional scripts produce specific figures and analyses. Scripts marked with * can run independently; the rest require <code>run_nonstationary.R</code> first:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">Rscript</span> scripts/run_trends.R           <span class="co"># Trend diagnostics (trend map) *</span></span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="ex">Rscript</span> scripts/plot_study_area.R      <span class="co"># Study area map (Figure 1) *</span></span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">Rscript</span> scripts/temporal_cv.R          <span class="co"># Temporal out-of-sample validation</span></span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">Rscript</span> scripts/temporal_cv_figures.R  <span class="co"># Regenerate temporal CV figures from saved results</span></span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="ex">Rscript</span> scripts/simulation_study.R     <span class="co"># Parameter recovery simulation study (§4.6.4)</span></span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="ex">Rscript</span> scripts/rmse_decomposition.R   <span class="co"># RL improvement by parameter and region (Table 3)</span></span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="ex">Rscript</span> scripts/baseline_comparisons.R <span class="co"># Nearest-ADCIRC bias correction baselines (§5.1)</span></span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="ex">Rscript</span> scripts/gradient_benchmark.R   <span class="co"># Analytic vs numerical gradient timing</span></span></code></pre></div>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="ex">Rscript</span> scripts/simulation_study.R     <span class="co"># Parameter recovery simulation study (§4.6.4)</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="ex">Rscript</span> scripts/rmse_decomposition.R   <span class="co"># RL improvement by parameter and region (Table 3)</span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="ex">Rscript</span> scripts/baseline_comparisons.R <span class="co"># Nearest-ADCIRC bias correction baselines (§5.1)</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="ex">Rscript</span> scripts/gradient_benchmark.R   <span class="co"># Analytic vs numerical gradient timing</span></span></code></pre></div>
 <p>Seeds for all stochastic steps are documented in the scripts and fixed for reproducibility (bootstrap: 42, multi-start optimization: 2026).</p>
 </div>
 <div class="section level2">

@@ -206,8 +206,6 @@ first:
 ``` bash
 Rscript scripts/run_trends.R           # Trend diagnostics (trend map) *
 Rscript scripts/plot_study_area.R      # Study area map (Figure 1) *
-Rscript scripts/temporal_cv.R          # Temporal out-of-sample validation
-Rscript scripts/temporal_cv_figures.R  # Regenerate temporal CV figures from saved results
 Rscript scripts/simulation_study.R     # Parameter recovery simulation study (§4.6.4)
 Rscript scripts/rmse_decomposition.R   # RL improvement by parameter and region (Table 3)
 Rscript scripts/baseline_comparisons.R # Nearest-ADCIRC bias correction baselines (§5.1)
