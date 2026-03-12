@@ -93,10 +93,10 @@ nonstationary alternative that accounts for NOAA sea level trends, see
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>A small fraction of bootstrap resamples may produce degenerate data
-that causes warnings or convergence failures in the underlying GEV fitting
-routine (<code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>). This is expected behavior: failed fits are
-recorded in <code>n_failures</code> and handled via pairwise-complete covariance
-estimation. Typical failure rates are well below 1 percent.</p>
+that causes warnings or convergence failures in <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>.
+Failed fits are recorded in <code>n_failures</code> and excluded via
+pairwise-complete covariance estimation (failure rates are typically
+well below 1 percent).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

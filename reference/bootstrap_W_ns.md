@@ -54,10 +54,12 @@ skips unobserved entries.
 
 ## Note
 
-Bootstrap resamples occasionally produce degenerate samples where the
-nonstationary GEV fit fails to converge. Failed resamples are counted in
-`n_failures` and handled by pairwise-complete covariance. In practice
-the failure rate is negligible (\< 1 percent).
+A small fraction of bootstrap resamples may produce degenerate data that
+causes warnings or convergence failures in
+[`extRemes::fevd`](https://rdrr.io/pkg/extRemes/man/fevd.html). Failed
+fits are recorded in `n_failures` and excluded via pairwise-complete
+covariance estimation (failure rates are typically well below 1
+percent).
 
 ## See also
 

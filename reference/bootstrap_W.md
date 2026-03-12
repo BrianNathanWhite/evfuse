@@ -50,12 +50,11 @@ A list with components:
 ## Note
 
 A small fraction of bootstrap resamples may produce degenerate data that
-causes warnings or convergence failures in the underlying GEV fitting
-routine
-([`extRemes::fevd`](https://rdrr.io/pkg/extRemes/man/fevd.html)). This
-is expected behavior: failed fits are recorded in `n_failures` and
-handled via pairwise-complete covariance estimation. Typical failure
-rates are well below 1 percent.
+causes warnings or convergence failures in
+[`extRemes::fevd`](https://rdrr.io/pkg/extRemes/man/fevd.html). Failed
+fits are recorded in `n_failures` and excluded via pairwise-complete
+covariance estimation (failure rates are typically well below 1
+percent).
 
 ## See also
 

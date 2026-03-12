@@ -41,11 +41,12 @@ A list with W_bs, Gamma, and n_failures.
 
 ## Note
 
-Some bootstrap resamples will produce degenerate data that fails GEV
-fitting (convergence warnings from
-[`extRemes::fevd`](https://rdrr.io/pkg/extRemes/man/fevd.html)). These
-are recorded in `n_failures` and excluded via pairwise-complete
-covariance estimation. Failure rates are typically well under 1 percent.
+A small fraction of bootstrap resamples may produce degenerate data that
+causes warnings or convergence failures in
+[`extRemes::fevd`](https://rdrr.io/pkg/extRemes/man/fevd.html). Failed
+fits are recorded in `n_failures` and excluded via pairwise-complete
+covariance estimation (failure rates are typically well below 1
+percent).
 
 ## See also
 

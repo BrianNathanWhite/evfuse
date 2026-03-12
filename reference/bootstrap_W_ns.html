@@ -96,10 +96,11 @@ This is by design: <code><a href="embed_W.html">embed_W</a></code> skips unobser
     </div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Bootstrap resamples occasionally produce degenerate samples where
-the nonstationary GEV fit fails to converge. Failed resamples are counted
-in <code>n_failures</code> and handled by pairwise-complete covariance. In
-practice the failure rate is negligible (&lt; 1 percent).</p>
+    <p>A small fraction of bootstrap resamples may produce degenerate data
+that causes warnings or convergence failures in <code><a href="https://rdrr.io/pkg/extRemes/man/fevd.html" class="external-link">extRemes::fevd</a></code>.
+Failed fits are recorded in <code>n_failures</code> and excluded via
+pairwise-complete covariance estimation (failure rates are typically
+well below 1 percent).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
