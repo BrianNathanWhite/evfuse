@@ -162,10 +162,11 @@ fit_gev_ns <- function(dat, df, covariate, ref_value = NULL) {
 #' @seealso \code{\link{bootstrap_W_detrended}} for the time-trend version.
 #' @return A list with \code{W_bs} (4L x 4L), \code{Gamma} (B x 4L),
 #'   and \code{n_failures}.
-#' @note Bootstrap resamples occasionally produce degenerate samples where
-#'   the nonstationary GEV fit fails to converge. Failed resamples are counted
-#'   in \code{n_failures} and handled by pairwise-complete covariance. In
-#'   practice the failure rate is negligible (< 1 percent).
+#' @note A small fraction of bootstrap resamples may produce degenerate data
+#'   that causes warnings or convergence failures in \code{extRemes::fevd}.
+#'   Failed fits are recorded in \code{n_failures} and excluded via
+#'   pairwise-complete covariance estimation (failure rates are typically
+#'   well below 1 percent).
 #' @export
 bootstrap_W_ns <- function(dat, df, covariate, B = 500,
                             ref_value = NULL, seed = NULL) {
@@ -220,7 +221,7 @@ bootstrap_W_ns <- function(dat, df, covariate, B = 500,
 
   message(sprintf("Running %d bootstrap replicates (%d total GEV fits). ",
                   B, B * n),
-          "Occasional warnings from GEV fitting are expected and handled gracefully.")
+          "Occasional warnings from GEV fitting are expected and will not affect results.")
 
   for (b in seq_len(B)) {
     noaa_yidx <- sample.int(T_noaa, replace = TRUE)

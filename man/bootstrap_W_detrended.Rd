@@ -27,10 +27,11 @@ ADCIRC sites use the standard stationary GEV.
 This is the primary bootstrap approach used in the manuscript.
 }
 \note{
-Some bootstrap resamples will produce degenerate data that fails
-GEV fitting (convergence warnings from \code{extRemes::fevd}). These
-are recorded in \code{n_failures} and excluded via pairwise-complete
-covariance estimation. Failure rates are typically well under 1 percent.
+A small fraction of bootstrap resamples may produce degenerate data
+that causes warnings or convergence failures in \code{extRemes::fevd}.
+Failed fits are recorded in \code{n_failures} and excluded via
+pairwise-complete covariance estimation (failure rates are typically
+well below 1 percent).
 }
 \seealso{
 \code{\link{bootstrap_W}} for the stationary version.

@@ -36,10 +36,11 @@ ordering: (mu0, mu1, log_sigma, xi) at all sites. ADCIRC mu1 entries are
 This is by design: \code{\link{embed_W}} skips unobserved entries.
 }
 \note{
-Bootstrap resamples occasionally produce degenerate samples where
-the nonstationary GEV fit fails to converge. Failed resamples are counted
-in \code{n_failures} and handled by pairwise-complete covariance. In
-practice the failure rate is negligible (< 1 percent).
+A small fraction of bootstrap resamples may produce degenerate data
+that causes warnings or convergence failures in \code{extRemes::fevd}.
+Failed fits are recorded in \code{n_failures} and excluded via
+pairwise-complete covariance estimation (failure rates are typically
+well below 1 percent).
 }
 \seealso{
 \code{\link{bootstrap_W_detrended}} for the time-trend version.

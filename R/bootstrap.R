@@ -18,10 +18,10 @@
 #'     \item{n_failures}{Number of (site, bootstrap) combinations that failed.}
 #'   }
 #' @note A small fraction of bootstrap resamples may produce degenerate data
-#'   that causes warnings or convergence failures in the underlying GEV fitting
-#'   routine (\code{extRemes::fevd}). This is expected behavior: failed fits are
-#'   recorded in \code{n_failures} and handled via pairwise-complete covariance
-#'   estimation. Typical failure rates are well below 1 percent.
+#'   that causes warnings or convergence failures in \code{extRemes::fevd}.
+#'   Failed fits are recorded in \code{n_failures} and excluded via
+#'   pairwise-complete covariance estimation (failure rates are typically
+#'   well below 1 percent).
 #' @export
 bootstrap_W <- function(dat, B = 500, log_scale = TRUE, seed = NULL) {
   if (!is.null(seed)) set.seed(seed)
@@ -60,7 +60,7 @@ bootstrap_W <- function(dat, B = 500, log_scale = TRUE, seed = NULL) {
 
   message(sprintf("Running %d bootstrap replicates (%d total GEV fits). ",
                   B, B * n),
-          "Occasional warnings from GEV fitting are expected and handled gracefully.")
+          "Occasional warnings from GEV fitting are expected and will not affect results.")
 
   for (b in seq_len(B)) {
     # Resample years separately per source (they may have different time spans)
