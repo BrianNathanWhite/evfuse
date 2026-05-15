@@ -48,6 +48,7 @@ isolated stations far from other gauges.
 ## Installation
 
 ``` r
+
 # install.packages("devtools")
 devtools::install_github("BrianNathanWhite/evfuse")
 ```
@@ -58,6 +59,7 @@ automatically.
 ## Quick Start
 
 ``` r
+
 library(evfuse)
 
 # Bundled dataset: 29 NOAA + 100 ADCIRC sites along U.S. Gulf/Atlantic coasts
@@ -98,6 +100,7 @@ vignette](https://briannathanwhite.github.io/evfuse/vignettes/evfuse-tutorial.Rm
 You can also view it in R after installing with vignettes:
 
 ``` r
+
 devtools::install_github("BrianNathanWhite/evfuse", build_vignettes = TRUE)
 vignette("evfuse-tutorial")
 ```
@@ -151,6 +154,7 @@ The `source_params` argument maps source labels to parameter indices in
 the joint model:
 
 ``` r
+
 # df is your data frame in the format shown above
 # 2 sources (default): 6-dim model
 dat <- load_data(df, source_params = list(gauge = 1:3, model = 4:6))

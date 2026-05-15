@@ -25,6 +25,7 @@ levels at 129 sites along the U.S. Gulf and Atlantic coasts: 29 NOAA
 tidal gauge stations and 100 ADCIRC numerical simulation points.
 
 ``` r
+
 library(evfuse)
 data(coast_data)
 
@@ -40,6 +41,7 @@ Fit GEV(mu, sigma, xi) at each site via maximum likelihood. Parameters
 are stored as (mu, log sigma, xi) for unconstrained optimization.
 
 ``` r
+
 stage1 <- fit_gev_all(coast_data)
 sum(stage1$converged)
 # [1] 129
@@ -52,6 +54,7 @@ bootstrap (resampling years to preserve spatial dependence within each
 data source). Apply Wendland tapering to enforce sparsity.
 
 ``` r
+
 D <- compute_distances(coast_data$sites)
 bs <- bootstrap_W(coast_data, B = 500, seed = 42)
 W_tap <- taper_W(bs$W_bs, D, lambda = 300)
@@ -73,6 +76,7 @@ where each site contributes only its observed dimensions (NOAA: 1-3,
 ADCIRC: 4-6).
 
 ``` r
+
 model <- fit_spatial_model(stage1, coast_data, W_tap, D,
                            control = list(maxit = 2000, trace = 0))
 model$optim_result$convergence
@@ -86,6 +90,7 @@ both NOAA and ADCIRC observations to produce NOAA-scale GEV parameters
 with reduced uncertainty.
 
 ``` r
+
 # Predict at a few example coastal sites
 new_sites <- data.frame(lon = c(-90.0, -81.5, -75.5), lat = c(30.0, 31.5, 36.8))
 preds <- predict_krig(model, new_sites)
@@ -101,6 +106,7 @@ The closed-form block LOO-CV (Rasmussen & Williams, 2006, eq. 5.12)
 evaluates predictive performance at each NOAA site without refitting.
 
 ``` r
+
 loo <- loo_cv(model)
 sum_loo <- loo_summary(loo, r = 100)
 
@@ -118,6 +124,7 @@ NOAA/ADCIRC. Each entry maps a data source name to its parameter indices
 in the joint model:
 
 ``` r
+
 # Example: 3 sources, each observing 3 GEV parameters
 dat <- load_data(df, source_params = list(
   gauge    = 1:3,
