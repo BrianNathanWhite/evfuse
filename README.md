@@ -63,9 +63,11 @@ linear trend at NOAA sites, bootstrap, Stage 2 coregionalization, kriging,
 return level maps, LOO-CV, block CV, and all manuscript figures. Output
 goes to `figures/` and `tables/`.
 
-Additional standalone scripts:
+Additional scripts (most read the fitted models written to `data-raw/` by
+the main pipeline above, so run it first):
 
 ```bash
+Rscript scripts/ad_gof.R               # GEV goodness-of-fit, bootstrap (Section S2)
 Rscript scripts/run_trends.R           # Trend diagnostics
 Rscript scripts/plot_study_area.R      # Study area map (Figure 1)
 Rscript scripts/simulation_study.R     # Parameter recovery (§4.6.4)

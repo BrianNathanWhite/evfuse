@@ -13,6 +13,7 @@ library(gridExtra)
 
 dir.create("figures", showWarnings = FALSE)
 dir.create("tables", showWarnings = FALSE)
+dir.create("data-raw", showWarnings = FALSE)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
