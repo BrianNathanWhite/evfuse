@@ -166,8 +166,9 @@ at sparse observation locations.
 
 ## Reproducing the Paper Results
 
-All figures, tables, and numerical results from the paper are generated
-by a single master script. Clone the repository and run:
+The figures, tables, and numerical results from the paper are generated
+by a master pipeline script plus a small set of auxiliary scripts.
+Clone the repository and run:
 
 ```bash
 git clone https://github.com/BrianNathanWhite/evfuse.git
@@ -178,7 +179,7 @@ Rscript scripts/run_nonstationary.R
 This runs the full nonstationary pipeline end-to-end: Stage 1 GEV fitting
 (with linear μ trend at NOAA sites), bootstrap, Stage 2 coregionalization,
 kriging, return level maps, LOO-CV, block CV, PIT calibration, taper
-sensitivity, and all manuscript figures. Expected runtime is approximately
+sensitivity, and most manuscript figures. Expected runtime is approximately
 15 minutes on a modern desktop. The bundled `coast_data` dataset
 contains all 129 sites x 43 years of annual maxima needed to reproduce
 the analysis. Output goes to `figures/` (PNGs), `tables/` (summary text),
@@ -194,6 +195,10 @@ Rscript scripts/simulation_study.R     # Parameter recovery simulation study (§
 Rscript scripts/rmse_decomposition.R   # RL improvement by parameter and region (Table 3)
 Rscript scripts/baseline_comparisons.R # Nearest-ADCIRC bias correction baselines (§5.1)
 Rscript scripts/gradient_benchmark.R   # Analytic vs numerical gradient timing
+Rscript scripts/saturation.R           # ADCIRC subsampling curve (Figure 7)
+Rscript scripts/se_comparison.R        # Delta vs simulation SEs (Figure S6)
+Rscript scripts/combine_ratio_maps.R   # Assemble Figure 6 from its two panels
+Rscript scripts/run_w_sensitivity.R    # Bootstrap batch stability (§4.6.3)
 ```
 
 Seeds for all stochastic steps are documented in the scripts and fixed

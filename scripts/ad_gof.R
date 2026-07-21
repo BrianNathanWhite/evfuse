@@ -102,3 +102,7 @@ cat(sprintf("Reject after Bonferroni (%.2g): %d / %d; smallest p = %.4f\n",
 cat(sprintf("By source @ a=%.2f: NOAA %d/%d | ADCIRC %d/%d\n", ALPHA,
             sum(res$p_boot[res$source == "NOAA"] < ALPHA), sum(res$source == "NOAA"),
             sum(res$p_boot[res$source == "ADCIRC"] < ALPHA), sum(res$source == "ADCIRC")))
+
+write.csv(res[order(res$source, res$site), ], "tables/ad_test_results.csv",
+          row.names = FALSE)
+cat("Saved tables/ad_test_results.csv\n")

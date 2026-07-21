@@ -32,7 +32,7 @@ Joint RL RMSE:     0.6647
 NOAA-only RL RMSE: 0.8097
 RL RMSE reduction: 17.9% (all 29), 36.1% (excl Gulf)
 Joint wins: 24/29 (all), 20/25 (excl Gulf)
-LPD gain (excl Gulf): 74636112.86
+LPD gain (excl Gulf): 74636112.86 (unstable: near-singular NOAA-only covariance in one fold; not reported in paper)
 
 ── Taper Sensitivity ─────────────────────────────────────────────
   lambda=150: NLL=-81.5308, RL RMSE=0.4631, reduction=36.1%, LPD gain=30.71

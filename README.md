@@ -60,11 +60,12 @@ Rscript scripts/run_nonstationary.R
 
 This runs the full pipeline end-to-end (~15 min): Stage 1 fitting with
 linear trend at NOAA sites, bootstrap, Stage 2 coregionalization, kriging,
-return level maps, LOO-CV, block CV, and all manuscript figures. Output
+return level maps, LOO-CV, block CV, and most manuscript figures. Output
 goes to `figures/` and `tables/`.
 
-Additional scripts (most read the fitted models written to `data-raw/` by
-the main pipeline above, so run it first):
+Additional scripts produce the remaining figures and analyses (most read
+the fitted models written to `data-raw/` by the main pipeline above, so
+run it first):
 
 ```bash
 Rscript scripts/ad_gof.R               # GEV goodness-of-fit, bootstrap (Section S2)
@@ -74,6 +75,10 @@ Rscript scripts/simulation_study.R     # Parameter recovery (§4.6.4)
 Rscript scripts/rmse_decomposition.R   # RMSE by parameter/region (Table 3)
 Rscript scripts/baseline_comparisons.R # Bias correction baselines (§5.1)
 Rscript scripts/gradient_benchmark.R   # Analytic vs numerical gradient
+Rscript scripts/saturation.R           # ADCIRC subsampling curve (Figure 7)
+Rscript scripts/se_comparison.R        # Delta vs simulation SEs (Figure S6)
+Rscript scripts/combine_ratio_maps.R   # Assemble Figure 6 from its two panels
+Rscript scripts/run_w_sensitivity.R    # Bootstrap batch stability (§4.6.3)
 ```
 
 ## References

@@ -128,7 +128,7 @@ cat(sprintf("Joint kriging at %d grid points\n", nrow(grid)))
 saveRDS(preds_joint, "data-raw/predictions_grid_ns.rds")
 
 rl_joint <- compute_return_levels(preds_joint, r = 100, method = "both",
-                                   n_sim = 5000, seed = 123)
+                                   n_sim = 10000, seed = 123)
 cat(sprintf("Joint 100-yr RL range: [%.3f, %.3f]\n",
             min(rl_joint$return_level), max(rl_joint$return_level)))
 saveRDS(rl_joint, "data-raw/return_levels_ns.rds")
@@ -138,7 +138,7 @@ preds_noaa <- predict_krig_naive(noaa_model, grid)
 saveRDS(preds_noaa, "data-raw/predictions_noaa_only_ns.rds")
 
 rl_noaa <- compute_return_levels(preds_noaa, r = 100, method = "both",
-                                  n_sim = 5000, seed = 123)
+                                  n_sim = 10000, seed = 123)
 cat(sprintf("NOAA-only 100-yr RL range: [%.3f, %.3f]\n",
             min(rl_noaa$return_level), max(rl_noaa$return_level)))
 saveRDS(rl_noaa, "data-raw/rl_noaa_only_ns.rds")
@@ -148,7 +148,7 @@ preds_adcirc <- predict_krig_naive(adcirc_model, grid)
 saveRDS(preds_adcirc, "data-raw/predictions_adcirc_only.rds")
 
 rl_adcirc <- compute_return_levels(preds_adcirc, r = 100, method = "both",
-                                    n_sim = 5000, seed = 123)
+                                    n_sim = 10000, seed = 123)
 cat(sprintf("ADCIRC-only 100-yr RL range: [%.3f, %.3f]\n",
             min(rl_adcirc$return_level), max(rl_adcirc$return_level)))
 saveRDS(rl_adcirc, "data-raw/rl_adcirc_only.rds")
@@ -1409,7 +1409,8 @@ summary_text <- function() {
               bcv_rl_pct, bcv_rl_pct_ex))
   cat(sprintf("Joint wins: %d/29 (all), %d/25 (excl Gulf)\n",
               bcv_wins, bcv_wins_ex))
-  cat(sprintf("LPD gain (excl Gulf): %.2f\n", bcv_lpd_j_ex - bcv_lpd_n_ex))
+  cat(sprintf("LPD gain (excl Gulf): %.2f (unstable: near-singular NOAA-only covariance in one fold; not reported in paper)\n",
+              bcv_lpd_j_ex - bcv_lpd_n_ex))
   cat("\n")
 
   cat("── Taper Sensitivity ─────────────────────────────────────────────\n")
