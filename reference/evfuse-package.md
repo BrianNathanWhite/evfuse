@@ -25,8 +25,10 @@ Useful links:
 
 Authors:
 
+- Brian N. White <bnw@unc.edu>
+
 - Brian Blanton
 
-- Rick Luettich
+- Richard A. Luettich Jr.
 
 - Richard L. Smith
