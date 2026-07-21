@@ -4,9 +4,9 @@
 
 The `evfuse` package implements a two-stage frequentist framework for
 fusing sparse observations and dense simulations for spatial extreme
-value analysis (White et al., in preparation). While developed for U.S.
-coastal sea levels (NOAA tidal gauges + ADCIRC simulations), the
-framework applies to any setting with annual maxima from multiple
+value analysis (White et al. 2026, arXiv:2603.03247). While developed
+for U.S. coastal sea levels (NOAA tidal gauges + ADCIRC simulations),
+the framework applies to any setting with annual maxima from multiple
 spatial data sources.
 
 1.  **Stage 1**: Fit GEV distributions independently at each site.
