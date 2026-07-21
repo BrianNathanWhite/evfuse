@@ -20,7 +20,6 @@ BugReports: https://github.com/BrianNathanWhite/evfuse/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
 LazyData: true
 Imports:
     extRemes,
@@ -40,3 +39,4 @@ VignetteBuilder: knitr
 Config/testthat/edition: 3
 Depends: 
     R (>= 3.5)
+Config/roxygen2/version: 8.0.0

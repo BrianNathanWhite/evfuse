@@ -22,8 +22,9 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Brian N. White \email{bnw@unc.edu}
   \item Brian Blanton
-  \item Rick Luettich
+  \item Richard A. Luettich Jr.
   \item Richard L. Smith
 }
 
