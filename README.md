@@ -55,8 +55,12 @@ rl$se_sim
 ```bash
 git clone https://github.com/BrianNathanWhite/evfuse.git
 cd evfuse
+Rscript -e 'install.packages(c("ggplot2", "sf", "gridExtra", "maps", "ragg"))'
 Rscript scripts/run_nonstationary.R
 ```
+
+The `install.packages()` line covers the figure dependencies, which are
+Suggests and therefore not installed automatically with the package.
 
 This runs the full pipeline end-to-end (~15 min): Stage 1 fitting with
 linear trend at NOAA sites, bootstrap, Stage 2 coregionalization, kriging,

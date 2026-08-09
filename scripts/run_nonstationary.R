@@ -6,6 +6,19 @@
 # Usage: Rscript scripts/run_nonstationary.R
 # Expected runtime: ~15 minutes
 
+# Figure packages are Suggests, which install_github() does not install by
+# default; check up front rather than failing at the figure stage after the
+# model fitting has already run.
+fig_pkgs <- c("ggplot2", "sf", "gridExtra", "maps", "ragg")
+missing_pkgs <- fig_pkgs[!vapply(fig_pkgs, requireNamespace, logical(1),
+                                 quietly = TRUE)]
+if (length(missing_pkgs) > 0) {
+  stop("Missing packages needed for figures: ",
+       paste(missing_pkgs, collapse = ", "),
+       "\nInstall with: install.packages(c(\"",
+       paste(missing_pkgs, collapse = "\", \""), "\"))", call. = FALSE)
+}
+
 devtools::load_all()
 library(ggplot2)
 library(sf)
@@ -1193,8 +1206,10 @@ cat(sprintf("%-12s %8s %8s %8s\n", "(expected)", "14.5", "23.2", "27.6"))
 cat("\nKS Tests for Uniformity of PIT Values\n")
 cat(sprintf("%-12s %8s %10s\n", "Parameter", "D", "p-value"))
 cat(sprintf("%-12s %8s %10s\n", "---------", "---", "-------"))
+ks_pvals <- numeric(3)
 for (j in 1:3) {
   ks <- ks.test(pit_param[, j], "punif")
+  ks_pvals[j] <- ks$p.value
   cat(sprintf("%-12s %8.3f %10.3f\n", params[j], ks$statistic, ks$p.value))
 }
 ks_rl <- ks.test(pit_rl, "punif")
@@ -1441,6 +1456,53 @@ summary_text <- function() {
   cat(sprintf("Joint mean SE:      %.4f m\n", mean_se_j))
   cat(sprintf("NOAA-only mean SE:  %.4f m\n", mean_se_n))
   cat("\n")
+
+  cat("── LOO-CV Parameter RMSE ────────────────────────────────────\n")
+  cat(sprintf("LOO log_sigma RMSE:  Joint=%.4f NOAA=%.4f\n",
+              sum_joint$param_stats$rmse[2], sum_noaa$param_stats$rmse[2]))
+  cat(sprintf("LOO xi RMSE:         Joint=%.4f NOAA=%.4f\n",
+              sum_joint$param_stats$rmse[3], sum_noaa$param_stats$rmse[3]))
+  cat("\n")
+
+  cat("── KS p-values (PIT uniformity) ─────────────────────────────\n")
+  cat(sprintf("  mu:        p = %.3f\n", ks_pvals[1]))
+  cat(sprintf("  log_sigma: p = %.3f\n", ks_pvals[2]))
+  cat(sprintf("  xi:        p = %.3f\n", ks_pvals[3]))
+  cat(sprintf("  100-yr RL: p = %.3f\n", ks_rl$p.value))
+  cat("\n")
+
+  cat("── SE Ratio (NOAA-only / Joint, 100-yr RL) ──────────────────\n")
+  se_ratio <- rl_noaa$se_sim / rl_joint$se_sim
+  se_ratio <- se_ratio[is.finite(se_ratio)]
+  cat(sprintf("Median SE ratio:     %.2f\n", median(se_ratio)))
+  cat(sprintf("%% coastline > 1.5:   %.1f%%\n", 100 * mean(se_ratio > 1.5)))
+  cat("\n")
+
+  cat("── Block CV Parameter RMSE ──────────────────────────────────\n")
+  cat(sprintf("Block CV mu RMSE:    Joint=%.4f NOAA=%.4f\n",
+              bcv_rmse_j[1], bcv_rmse_n[1]))
+  cat(sprintf("Block CV logsig RMSE: Joint=%.4f NOAA=%.4f\n",
+              bcv_rmse_j[2], bcv_rmse_n[2]))
+  cat(sprintf("Block CV xi RMSE:    Joint=%.4f NOAA=%.4f\n",
+              bcv_rmse_j[3], bcv_rmse_n[3]))
+  cat(sprintf("log_sig reversal:    NOAA=%.4f Joint=%.4f reversal=%s\n",
+              bcv_rmse_n[2], bcv_rmse_j[2], bcv_rmse_n[2] < bcv_rmse_j[2]))
+  cat("\n")
+
+  cat("── Taper Sensitivity Correlations ───────────────────────────\n")
+  for (tl in seq_len(nrow(taper_results))) {
+    cat(sprintf("  lambda=%d: Cor(mu)=%.3f Cor(logsig)=%.3f Cor(xi)=%.3f\n",
+                taper_results$lambda[tl], taper_results$cor_mu[tl],
+                taper_results$cor_ls[tl], taper_results$cor_xi[tl]))
+  }
+  cat("\n")
+
+  cat("── QQ Plot Sites (Figure 1) ─────────────────────────────────\n")
+  for (qq_i in seq_along(sites_qq)) {
+    cat(sprintf("  %s (site %s): xi = %.3f\n",
+                qq_labels[qq_i], sites$location[sites_qq[qq_i]],
+                stage1$theta_hat[sites_qq[qq_i], "xi"]))
+  }
 }
 
 summary_text()
