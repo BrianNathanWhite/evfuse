@@ -19,6 +19,7 @@
 
 devtools::load_all()
 library(ggplot2)
+source("scripts/fig_theme.R")
 
 # ── 1. Load pre-fitted nonstationary models ─────────────────
 joint_full <- readRDS("data-raw/model_6dim_ns.rds")
@@ -307,7 +308,7 @@ p <- ggplot(results, aes(x = n_adcirc, y = rl_rmse_reduction_pct)) +
                      labels = function(x) paste0(x, "%")) +
   labs(x = expression(n[ADCIRC]),
        y = "100-yr RL RMSE reduction vs. NOAA-only") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(panel.grid.minor = element_blank(),
         plot.margin = margin(10, 15, 10, 10))
 

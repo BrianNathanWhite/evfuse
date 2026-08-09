@@ -7,6 +7,7 @@
 
 devtools::load_all()
 library(ggplot2)
+source("scripts/fig_theme.R")
 
 n_sim <- 10000
 seed  <- 123
@@ -101,7 +102,7 @@ p <- ggplot(df_all, aes(x = delta, y = sim, color = xi)) +
   facet_wrap(~panel, scales = "free") +
   labs(x = "Delta method SE (m)", y = "Simulation SE (m)",
        title = "100-year Return Level SE: Delta Method vs. Simulation") +
-  theme_minimal(base_size = 11) +
+  theme_bw_nogrid(base_size = 11) +
   theme(plot.title = element_text(size = 12),
         plot.background = element_rect(fill = "white", color = NA),
         panel.background = element_rect(fill = "white", color = NA))

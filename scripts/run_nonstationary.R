@@ -23,6 +23,7 @@ devtools::load_all()
 library(ggplot2)
 library(sf)
 library(gridExtra)
+source("scripts/fig_theme.R")
 
 dir.create("figures", showWarnings = FALSE)
 dir.create("tables", showWarnings = FALSE)
@@ -213,10 +214,10 @@ states_sf <- st_sf(geometry = states_sf)
 
 crs_albers <- st_crs(5070)
 
-theme_map <- theme_minimal(base_size = 14) +
+theme_map <- theme_bw_nogrid(base_size = 14) +
   theme(
     axis.title = element_blank(),
-    axis.text = element_text(size = 10, color = "grey40"),
+    axis.text = element_text(size = 10, color = "black"),
     panel.grid = element_blank(),
     strip.text = element_text(size = 14),
     legend.position = "right",
@@ -351,7 +352,7 @@ make_s1_panel <- function(param_col, label, fill_scale, color_scale,
     labs(title = label, x = "Longitude",
          y = if (show_y) "Latitude" else NULL, fill = NULL) +
     guides(colour = "none") +
-    theme_minimal(base_size = 12) +
+    theme_bw_nogrid(base_size = 12) +
     theme(
       plot.background   = element_rect(fill = "white", colour = NA),
       panel.background  = element_rect(fill = "white", colour = NA),
@@ -436,7 +437,7 @@ make_krig_panel <- function(param_col, label, scale, show_y = TRUE) {
     coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
     labs(title = label, x = "Longitude",
          y = if (show_y) "Latitude" else NULL, color = NULL) +
-    theme_minimal(base_size = 12) +
+    theme_bw_nogrid(base_size = 12) +
     theme(
       plot.background   = element_rect(fill = "white", colour = NA),
       panel.background  = element_rect(fill = "white", colour = NA),
@@ -524,7 +525,7 @@ p3 <- ggplot() +
   coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
   labs(x = "Longitude", y = "Latitude",
        title = "100-Year Return Level (Year 2000)") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
@@ -551,7 +552,7 @@ p4 <- ggplot() +
   coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
   labs(x = "Longitude", y = "Latitude",
        title = "Standard Error") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
@@ -704,7 +705,7 @@ p5 <- ggplot(profile_df, aes(x = dist, y = rl, color = model, fill = model)) +
   labs(x = "Distance along coast", y = "100-year return level at year 2000 (m)") +
   coord_cartesian(clip = "off",
                   xlim = c(0, max(cities$dist_km) * 1.03)) +
-  theme_minimal(base_size = 11) +
+  theme_bw_nogrid(base_size = 11) +
   theme(
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA),
@@ -755,7 +756,7 @@ p6 <- ggplot() +
   coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
   labs(title = "SE(NOAA-only) / SE(joint)",
        x = "Longitude", y = "Latitude") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
@@ -791,7 +792,7 @@ p7 <- ggplot() +
   coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
   labs(title = "RL(joint) / RL(NOAA-only)",
        x = "Longitude", y = "Latitude") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
@@ -823,7 +824,7 @@ make_rl_panel <- function(rl_data, title) {
                           name = "RL (m)", limits = comp_rl_lims) +
     coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
     labs(title = title, x = "Longitude", y = "Latitude") +
-    theme_minimal(base_size = 12) +
+    theme_bw_nogrid(base_size = 12) +
     theme(
       plot.background   = element_rect(fill = "white", colour = NA),
       panel.background  = element_rect(fill = "white", colour = NA),
@@ -860,7 +861,7 @@ scatter_df <- data.frame(
   xi_noaa  = preds_noaa_noaa$noaa_mean[, "xi"]
 )
 
-scatter_theme <- theme_minimal(base_size = 11) +
+scatter_theme <- theme_bw_nogrid(base_size = 11) +
   theme(
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA),
@@ -948,7 +949,7 @@ p_pit <- ggplot(pit_df, aes(x = value)) +
   scale_x_continuous(breaks = c(0, 0.5, 1)) +
   scale_y_continuous(breaks = function(x) seq(0, max(x), by = 2)) +
   labs(x = "PIT value", y = "Count") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     panel.grid = element_blank(),
     strip.text = element_text(size = 14),

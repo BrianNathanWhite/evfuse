@@ -4,6 +4,7 @@
 # US East and Gulf coasts.
 
 library(ggplot2)
+source("scripts/fig_theme.R")
 
 devtools::load_all()
 data(coast_data)
@@ -81,11 +82,11 @@ p <- ggplot() +
   labs(x = "Longitude", y = "Latitude") +
 
   # Theme
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
-    panel.grid.major = element_line(colour = "gray92", linewidth = 0.3),
+    panel.grid.major = element_blank(),
     panel.grid.minor = element_blank(),
     legend.position  = "inside",
     legend.position.inside = c(0.82, 0.18),

@@ -1,6 +1,7 @@
 #!/usr/bin/env Rscript
 # Trend diagnostics at 29 NOAA sites
 library(ggplot2)
+source("scripts/fig_theme.R")
 library(sf)
 devtools::load_all()
 
@@ -129,7 +130,7 @@ p1 <- ggplot(tab, aes(x = sens_slope, y = location_f, color = sig)) +
                      labels = c("p >= 0.05", "p < 0.05"),
                      name = "Mann-Kendall") +
   labs(x = "Sen's slope (m/year)", y = "NOAA site (ordered by latitude)") +
-  theme_minimal(base_size = 11) +
+  theme_bw_nogrid(base_size = 11) +
   theme(
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA),
@@ -179,11 +180,11 @@ p2 <- ggplot() +
          fill = guide_colorbar(order = 2)) +
   coord_cartesian(xlim = c(-98, -66), ylim = c(24, 46), expand = FALSE) +
   labs(x = "Longitude", y = "Latitude") +
-  theme_minimal(base_size = 12) +
+  theme_bw_nogrid(base_size = 12) +
   theme(
     plot.background   = element_rect(fill = "white", colour = NA),
     panel.background  = element_rect(fill = "white", colour = NA),
-    panel.grid.major  = element_line(colour = "gray92", linewidth = 0.3),
+    panel.grid.major = element_blank(),
     panel.grid.minor  = element_blank(),
     legend.position   = "right"
   )
