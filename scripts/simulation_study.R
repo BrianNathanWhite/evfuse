@@ -69,6 +69,22 @@ chol_W <- chol(W_tap_obs)
 obs_param <- ((obs$obs_idx - 1) %/% L) + 1
 obs_site  <- ((obs$obs_idx - 1) %% L) + 1
 
+rl_vec <- function(m, s, x) vapply(seq_along(m), function(k) gev_return_level(m[k], s[k], x[k], 100), numeric(1))
+
+# Map observed-space W (obs$obs_idx order) into bootstrap-space ordering for fit_naive_model
+pos <- matrix(NA_integer_, L, p)
+for (m in seq_len(n_obs)) pos[obs_site[m], obs_param[m]] <- m
+bmap <- integer(L * 3)
+for (i in seq_len(L)) {
+  fp <- if (dat$sites$data_source[i] == "NOAA") 1:3 else 4:6
+  for (jloc in 1:3) bmap[(jloc - 1) * L + i] <- pos[i, fp[jloc]]
+}
+W_boot_order <- W_tap_obs[bmap, bmap]
+
+rl_rmse_joint <- rep(NA_real_, 100)
+rl_rmse_noaa  <- rep(NA_real_, 100)
+noaa_idx_sim  <- which(dat$sites$data_source == "NOAA")
+
 # Storage for recovered correlations
 cors_recovered <- matrix(NA_real_, N_sim, 3,
                          dimnames = list(NULL, c("mu", "logsig", "xi")))
@@ -142,6 +158,29 @@ for (sim in seq_len(N_sim)) {
   cors_recovered[sim, "mu"]     <- Sig_hat[1, 4] / sqrt(Sig_hat[1, 1] * Sig_hat[4, 4])
   cors_recovered[sim, "logsig"] <- Sig_hat[2, 5] / sqrt(Sig_hat[2, 2] * Sig_hat[5, 5])
   cors_recovered[sim, "xi"]     <- Sig_hat[3, 6] / sqrt(Sig_hat[3, 3] * Sig_hat[6, 6])
+
+  # RL recovery vs the replicate-specific latent truth (RNG-shielded so the
+  # correlation-recovery stream reproduces Table 7 exactly)
+  rng_state <- .Random.seed
+  theta_true_noaa <- theta_full[noaa_idx_sim, 1:3, drop = FALSE]
+  rl_true <- rl_vec(theta_true_noaa[, 1], exp(theta_true_noaa[, 2]), theta_true_noaa[, 3])
+  loo_j <- tryCatch(loo_cv(fit_sim), error = function(e) NULL)
+  if (!is.null(loo_j)) {
+    rl_pj <- rl_vec(loo_j$loo_mean[, 1], exp(loo_j$loo_mean[, 2]), loo_j$loo_mean[, 3])
+    rl_rmse_joint[sim] <- sqrt(mean((rl_pj - rl_true)^2))
+  }
+  fit_n <- tryCatch(suppressWarnings(fit_naive_model(
+    stage1_sim, dat, W_boot_order, D, source = "NOAA", lambda = Inf,
+    n_starts = 5, control = list(maxit = 2000, trace = 0))),
+    error = function(e) NULL)
+  if (!is.null(fit_n)) {
+    loo_n <- tryCatch(loo_cv(fit_n), error = function(e) NULL)
+    if (!is.null(loo_n)) {
+      rl_pn <- rl_vec(loo_n$loo_mean[, 1], exp(loo_n$loo_mean[, 2]), loo_n$loo_mean[, 3])
+      rl_rmse_noaa[sim] <- sqrt(mean((rl_pn - rl_true)^2))
+    }
+  }
+  .Random.seed <<- rng_state
 }
 
 # Summarize
@@ -159,3 +198,20 @@ for (j in 1:3) {
               IQR(vals)))
 }
 cat("\n")
+
+# ── RL recovery summary ──
+ok <- !is.na(rl_rmse_joint)
+cat(sprintf("\nRL recovery across %d replicates (100-yr RL at 29 NOAA sites, LOO vs latent truth):\n", sum(ok)))
+cat(sprintf("  Joint:     mean RMSE = %.4f, median = %.4f\n",
+            mean(rl_rmse_joint[ok]), median(rl_rmse_joint[ok])))
+ok2 <- ok & !is.na(rl_rmse_noaa)
+cat(sprintf("  NOAA-only: mean RMSE = %.4f, median = %.4f (n=%d)\n",
+            mean(rl_rmse_noaa[ok2]), median(rl_rmse_noaa[ok2]), sum(ok2)))
+cat(sprintf("  Joint better in %d / %d replicates\n",
+            sum(rl_rmse_joint[ok2] < rl_rmse_noaa[ok2]), sum(ok2)))
+cat(sprintf("  Cor(recovered xi-correlation, joint RL RMSE) = %.3f\n",
+            cor(cors_recovered[ok, "xi"], rl_rmse_joint[ok])))
+saveRDS(list(cors_recovered = cors_recovered, rl_rmse_joint = rl_rmse_joint,
+             rl_rmse_noaa = rl_rmse_noaa),
+        "data-raw/simulation_rl_recovery.rds")
+cat("DONE sim_rl\n")

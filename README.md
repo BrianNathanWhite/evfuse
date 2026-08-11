@@ -75,7 +75,8 @@ run it first):
 Rscript scripts/ad_gof.R               # GEV goodness-of-fit, bootstrap (Section S2)
 Rscript scripts/run_trends.R           # Trend diagnostics
 Rscript scripts/plot_study_area.R      # Study area map (Figure 1)
-Rscript scripts/simulation_study.R     # Parameter recovery (§4.6.4)
+Rscript scripts/simulation_study.R     # Parameter + RL recovery (§4.6.4)
+Rscript scripts/shared_years_bootstrap.R # Cross-source W robustness (§3.2.3)
 Rscript scripts/rmse_decomposition.R   # RMSE by parameter/region (Table 3)
 Rscript scripts/baseline_comparisons.R # Bias correction baselines (§5.1)
 Rscript scripts/gradient_benchmark.R   # Analytic vs numerical gradient
