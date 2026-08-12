@@ -215,3 +215,19 @@ saveRDS(list(cors_recovered = cors_recovered, rl_rmse_joint = rl_rmse_joint,
              rl_rmse_noaa = rl_rmse_noaa),
         "data-raw/simulation_rl_recovery.rds")
 cat("DONE sim_rl\n")
+
+# Figure S7: recovered xi correlation vs return level recovery RMSE
+library(ggplot2)
+source("scripts/fig_theme.R")
+df_s7 <- data.frame(xi_cor = cors_recovered[, "xi"], rmse = rl_rmse_joint)
+df_s7 <- df_s7[complete.cases(df_s7), ]
+p_s7 <- ggplot(df_s7, aes(xi_cor, rmse)) +
+  geom_point(size = 2, alpha = 0.7, colour = "#2166AC") +
+  annotate("text", x = min(df_s7$xi_cor), y = max(df_s7$rmse),
+           label = sprintf("r == %.2f", cor(df_s7$xi_cor, df_s7$rmse)),
+           parse = TRUE, hjust = 0, size = 4) +
+  labs(x = expression("Recovered  " * Cor(xi[N], xi[A])),
+       y = "Joint-model 100-yr RL recovery RMSE (m)") +
+  theme_bw_nogrid(base_size = 12)
+ggsave("figures/sim_rl_scatter.png", p_s7, width = 5.5, height = 4, dpi = 300, bg = "white")
+cat("Saved figures/sim_rl_scatter.png\n")
