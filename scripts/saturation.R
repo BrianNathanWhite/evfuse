@@ -295,7 +295,7 @@ p <- ggplot(results, aes(x = n_adcirc, y = rl_rmse_reduction_pct)) +
            label = paste0("italic(n)[eff] %~~% ", n_eff),
            parse = TRUE, hjust = 0, size = 3.2, colour = "grey40") +
   annotate("text", x = n_eff + 1.5, y = ymax * 0.10,
-           label = "(theoretical)", hjust = 0, size = 3.0, colour = "grey50") +
+           label = "(heuristic)", hjust = 0, size = 3.0, colour = "grey50") +
   annotate("text", x = n_emp + 1.5, y = ymax * 0.18,
            label = paste0("italic(n)[plateau] %~~% ", n_emp),
            parse = TRUE, hjust = 0, size = 3.2, colour = "grey40") +
