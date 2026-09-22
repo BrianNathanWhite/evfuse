@@ -694,13 +694,14 @@ profile_df <- profile_df[order(profile_df$model, profile_df$dist), ]
 cities_profile <- cities[order(cities$dist_km), ]
 rownames(cities_profile) <- NULL
 
-p5 <- ggplot(profile_df, aes(x = dist, y = rl, color = model, fill = model)) +
-  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.15, color = NA) +
+fig5_cols <- c("Joint" = "#D55E00", "NOAA-only" = "#0072B2", "ADCIRC-only" = "grey35")
+fig5_ltys <- c("Joint" = "solid", "NOAA-only" = "22", "ADCIRC-only" = "11")
+p5 <- ggplot(profile_df, aes(x = dist, y = rl, color = model, fill = model, linetype = model)) +
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.15, color = NA, linetype = "solid") +
   geom_line(linewidth = 0.8) +
-  scale_color_manual(values = c("Joint" = "#E41A1C", "NOAA-only" = "#377EB8",
-                                 "ADCIRC-only" = "#4DAF4A"), name = NULL) +
-  scale_fill_manual(values = c("Joint" = "#E41A1C", "NOAA-only" = "#377EB8",
-                                "ADCIRC-only" = "#4DAF4A"), name = NULL) +
+  scale_color_manual(values = fig5_cols, name = NULL) +
+  scale_fill_manual(values = fig5_cols, name = NULL) +
+  scale_linetype_manual(values = fig5_ltys, name = NULL) +
   scale_x_continuous(breaks = NULL) +
   labs(x = "Distance along coast", y = "100-year return level at year 2000 (m)") +
   coord_cartesian(clip = "off",
@@ -710,6 +711,7 @@ p5 <- ggplot(profile_df, aes(x = dist, y = rl, color = model, fill = model)) +
     plot.background = element_rect(fill = "white", color = NA),
     panel.background = element_rect(fill = "white", color = NA),
     legend.position = "top",
+    legend.key.width = unit(2.4, "lines"),
     plot.margin = margin(5, 10, 55, 5, unit = "pt"),
     axis.title.x = element_text(margin = margin(t = 40))
   )
