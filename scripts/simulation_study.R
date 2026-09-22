@@ -216,7 +216,7 @@ saveRDS(list(cors_recovered = cors_recovered, rl_rmse_joint = rl_rmse_joint,
         "data-raw/simulation_rl_recovery.rds")
 cat("DONE sim_rl\n")
 
-# Figure S7: recovered xi correlation vs return level recovery RMSE
+# Supplementary scatter (not in the submitted paper): recovered xi correlation vs return level recovery RMSE
 library(ggplot2)
 source("scripts/fig_theme.R")
 df_s7 <- data.frame(xi_cor = cors_recovered[, "xi"], rmse = rl_rmse_joint)
